@@ -1,9 +1,8 @@
+import { solNative } from "lib/SolNative";
 import { observer } from "mobx-react-lite";
 import type { FC } from "react";
-import { Text, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import { useStore } from "store";
-import { Widget } from "stores/ui.store";
-import { Key } from "./Key";
 
 export const PermissionsBar: FC = observer(() => {
 	const store = useStore();
@@ -12,53 +11,21 @@ export const PermissionsBar: FC = observer(() => {
 		return null;
 	}
 
-	if (store.ui.calendarAuthorizationStatus === "notDetermined") {
-		return (
-			<View className="subBg flex-row items-center justify-end gap-1 py-2 px-4">
-				<Text className={"text-xs darker-text mr-1"}>
-					Grant calendar access
-				</Text>
-				<Key symbol={"⏎"} />
-			</View>
-		);
-	}
-
+	// Accessibility is required by window management and paste-to-frontmost.
 	if (!store.ui.isAccessibilityTrusted) {
 		return (
-			<View className="subBg flex-row items-center justify-end gap-1 py-2 px-4">
-				<Text className={"text-xs darker-text mr-1"}>
-					Grant accessibility access
-				</Text>
-				<Key symbol={"⏎"} />
-			</View>
-		);
-	}
-
-	if (!store.ui.hasDismissedGettingStarted) {
-		return (
-			<View className="subBg flex-row justify-end items-center gap-1 py-2 px-4 ">
-				<Text className={"text-xs darker-text mr-1"}>
-					Seems you just installed Sol, check out the getting started
-				</Text>
-				<Key symbol={"⏎"} primary />
-			</View>
-		);
-	}
-
-	if (
-		store.ui.focusedWidget === Widget.SEARCH &&
-		store.calendar.upcomingEvent
-	) {
-		return (
-			<View className="subBg flex-row items-center justify-end gap-1 py-2 px-4">
-				<Text className={"text-xs mr-1"} numberOfLines={1}>
-					Open Upcoming{" "}
-					<Text className="font-bold">
-						{store.calendar.upcomingEvent.title}
+			<TouchableOpacity
+				onPress={() => {
+					solNative.requestAccessibilityAccess();
+					solNative.hideWindow();
+				}}
+			>
+				<View className="subBg flex-row items-center justify-end gap-1 py-2 px-4">
+					<Text className="text-xs darker-text mr-1">
+						Window management needs Accessibility access — click to grant
 					</Text>
-				</Text>
-				<Key symbol={"⏎"} primary />
-			</View>
+				</View>
+			</TouchableOpacity>
 		);
 	}
 

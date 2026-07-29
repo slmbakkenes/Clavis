@@ -2,7 +2,7 @@ import Foundation
 import HotKey
 import LaunchAtLogin
 
-private let keychain = Keychain(service: "Sol")
+private let keychain = Keychain(service: "Radix")
 
 @objc(SolNative)
 class SolNative: RCTEventEmitter {
@@ -320,10 +320,6 @@ class SolNative: RCTEventEmitter {
     HotKeyManager.shared.catchEnterPress = false
   }
 
-  @objc func checkForUpdates() {
-    appDelegate?.checkForUpdates()
-  }
-
   @objc func setWindowRelativeSize(_ relative: NSNumber) {
     DispatchQueue.main.async {
       PanelManager.shared.setRelativeSize(relative as! Double)
@@ -444,10 +440,6 @@ class SolNative: RCTEventEmitter {
   @objc func updateHotkeys(_ hotkeys: NSDictionary) {
     guard let hotkeys = hotkeys as? [String: String] else { return }
     HotKeyManager.shared.updateHotkeys(hotkeyMap: hotkeys)
-  }
-
-  @objc func setUpcomingEventEnabled(_ enabled: Bool) {
-    StatusBarCalendarManager.shared.enabled = enabled
   }
 
   @objc func setHyperKeyEnabled(_ enabled: Bool) {

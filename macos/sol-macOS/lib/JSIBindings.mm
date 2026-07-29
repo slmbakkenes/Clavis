@@ -1,18 +1,14 @@
 #include "JSIBindings.hpp"
-#import "CalendarHelper.h"
 #import "JSIUtils.h"
 #include "SolMacros.h"
 #import "processes.h"
 #import <Cocoa/Cocoa.h>
-#import <EventKit/EKCalendar.h>
-#import <EventKit/EKEvent.h>
-#import <EventKit/EKParticipant.h>
 #import <Foundation/Foundation.h>
 #import <iostream>
 #ifdef DEBUG
-#import <sol_debug-Swift.h>
+#import <Radix_debug-Swift.h>
 #else
-#import <sol-Swift.h>
+#import <Radix-Swift.h>
 #endif
 #import "FolderWatcherJSI.h"
 
@@ -28,14 +24,12 @@ namespace jsi = facebook::jsi;
 namespace react = facebook::react;
 
 std::shared_ptr<react::CallInvoker> invoker;
-CalendarHelper *calendarHelper;
 
 NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
 
 void install(jsi::Runtime &rt,
              std::shared_ptr<react::CallInvoker> callInvoker) {
   invoker = callInvoker;
-  calendarHelper = [[CalendarHelper alloc] init];
   dateFormatter.dateFormat = @"yyyy-MM-dd'T'HH:mm:ssZ";
 
   auto setHeight = HOSTFN("setHeight", []) {
@@ -351,284 +345,6 @@ void install(jsi::Runtime &rt,
   //   return promise;
   // });
 
-  auto requestCalendarAccess = HOSTFN("requestCalendarAccess", []) {
-    auto promiseConstructor = rt.global().getPropertyAsFunction(rt, "Promise");
-
-    auto promise = promiseConstructor.callAsConstructor(rt, HOSTFN("executor", []) {
-      auto resolve = std::make_shared<jsi::Value>(rt, arguments[0]);
-
-      [calendarHelper requestCalendarAccess:^{
-        if (invoker == nullptr) {
-          return;
-        }
-
-        invoker->invokeAsync([resolve, &rt]() mutable {
-          resolve->asObject(rt).asFunction(rt).call(rt);
-        });
-      }];
-
-      return {};
-    }));
-    return promise;
-  });
-
-  auto getCalendarAuthorizationStatus =
-      HOSTFN("getCalendarAuthorizationStatus", []) {
-    NSString *status = [calendarHelper getCalendarAuthorizationStatus];
-    std::string statusStd = std::string([status UTF8String]);
-    return jsi::String::createFromUtf8(rt, statusStd);
-  });
-
-  auto getEvents = HOSTFN("getEvents", []) {
-    NSMutableArray<NSString *> *selectedCalendarIds = nil;
-    if (count > 0 && !arguments[0].isUndefined() && !arguments[0].isNull()) {
-      auto calendarIdsArray = arguments[0].asObject(rt).asArray(rt);
-      selectedCalendarIds = [NSMutableArray arrayWithCapacity:calendarIdsArray.size(rt)];
-      for (size_t i = 0; i < calendarIdsArray.size(rt); i++) {
-        auto id = calendarIdsArray.getValueAtIndex(rt, i).asString(rt).utf8(rt);
-        [selectedCalendarIds addObject:[NSString stringWithUTF8String:id.c_str()]];
-      }
-    }
-
-    auto promiseCtr = rt.global().getPropertyAsFunction(rt, "Promise");
-    auto promise = promiseCtr.callAsConstructor(
-                                                rt,
-                                                HOSTFN("executor", [selectedCalendarIds]) {
-      auto resolve = std::make_shared<jsi::Value>(rt, arguments[0]);
-      auto reject = std::make_shared<jsi::Value>(rt, arguments[1]);
-
-      dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0), ^{
-        @try {
-          NSArray<EKEvent *> *ekEvents = [calendarHelper
-              getEventsForCalendarIdentifiers:selectedCalendarIds];
-
-          invoker->invokeAsync([resolve, ekEvents = ekEvents, &rt]() mutable {
-            auto events = jsi::Array(rt, ekEvents.count);
-            NSString *colorString = @"";
-            auto count = ekEvents.count;
-
-            for (int i = 0; i < ekEvents.count; i++) {
-              EKEvent *ekEvent = [ekEvents objectAtIndex:i];
-              //            bool hasDeclined = false;
-
-              // If current user has declined the event: skip
-              if ([ekEvent hasAttendees]) {
-                NSArray<EKParticipant *> *participants = [ekEvent attendees];
-                for (int j = 0; j < participants.count; j++) {
-                  EKParticipant *participant = [participants objectAtIndex:j];
-                  if ([participant isCurrentUser] == YES &&
-                      [participant participantStatus] ==
-                          EKParticipantStatusDeclined) {
-                    continue;
-                  }
-                }
-              }
-
-              auto color = [[ekEvent calendar] color];
-
-              CGFloat redFloatValue, greenFloatValue, blueFloatValue;
-              int redIntValue, greenIntValue, blueIntValue;
-              NSString *redHexValue, *greenHexValue, *blueHexValue;
-
-              // Convert the NSColor to the RGB color space before we can access
-              // its components
-              NSColor *convertedColor = [color
-                  colorUsingColorSpace:[NSColorSpace genericRGBColorSpace]];
-
-              if (convertedColor) {
-                // Get the red, green, and blue components of the color
-                [convertedColor getRed:&redFloatValue
-                                 green:&greenFloatValue
-                                  blue:&blueFloatValue
-                                 alpha:NULL];
-
-                // Convert the components to numbers (unsigned decimal integer)
-                // between 0 and 255
-                redIntValue = redFloatValue * 255.99999f;
-                greenIntValue = greenFloatValue * 255.99999f;
-                blueIntValue = blueFloatValue * 255.99999f;
-
-                // Convert the numbers to hex strings
-                redHexValue = [NSString stringWithFormat:@"%02x", redIntValue];
-                greenHexValue =
-                    [NSString stringWithFormat:@"%02x", greenIntValue];
-                blueHexValue =
-                    [NSString stringWithFormat:@"%02x", blueIntValue];
-
-                // Concatenate the red, green, and blue components' hex strings
-                // together with a "#"
-                colorString =
-                    [NSString stringWithFormat:@"#%@%@%@", redHexValue,
-                                               greenHexValue, blueHexValue];
-              }
-
-              jsi::Object event = jsi::Object(rt);
-              event.setProperty(rt, "id",
-                                [[ekEvent eventIdentifier] UTF8String]);
-              auto title =
-                  jsi::String::createFromUtf8(rt, [[ekEvent title] UTF8String]);
-              event.setProperty(rt, "title", title);
-              if ([ekEvent URL] != NULL) {
-                event.setProperty(rt, "url",
-                                  [[[ekEvent URL] absoluteString] UTF8String]);
-              }
-              if ([ekEvent notes] != NULL) {
-                auto notes = jsi::String::createFromUtf8(
-                    rt, [[ekEvent notes] UTF8String]);
-                event.setProperty(rt, "notes", std::move(notes));
-              }
-
-              if ([ekEvent location] != NULL) {
-                event.setProperty(rt, "location",
-                                  [[ekEvent location] UTF8String]);
-              }
-
-              event.setProperty(rt, "color", [colorString UTF8String]);
-              if ([ekEvent startDate] != NULL) {
-                event.setProperty(
-                    rt, "date",
-                    [[dateFormatter stringFromDate:[ekEvent startDate]]
-                        UTF8String]);
-              }
-              if ([ekEvent endDate] != NULL) {
-                event.setProperty(
-                    rt, "endDate",
-                    [[dateFormatter stringFromDate:[ekEvent endDate]]
-                        UTF8String]);
-              }
-              event.setProperty(
-                  rt, "isAllDay",
-                  jsi::Value(static_cast<bool>([ekEvent isAllDay])));
-
-              event.setProperty(rt, "eventStatus",
-                                jsi::Value(static_cast<int>([ekEvent status])));
-
-              event.setProperty(
-                  rt, "availability",
-                  jsi::Value(static_cast<int>([ekEvent availability])));
-
-              if ([[ekEvent calendar] title] != NULL) {
-                event.setProperty(rt, "calendarTitle",
-                                  [[[ekEvent calendar] title] UTF8String]);
-              }
-              if ([[ekEvent calendar] calendarIdentifier] != NULL) {
-                event.setProperty(rt, "calendarId",
-                                  [[[ekEvent calendar] calendarIdentifier]
-                                      UTF8String]);
-              }
-
-              //            if ([ekEvent hasAttendees]) {
-              //              for (EKParticipant *participant in
-              //              ekEvent.attendees) {
-              //                if ([participant isCurrentUser]) {
-              //
-              //                  if (participant.participantStatus ==
-              //                      EKParticipantStatusAccepted) {
-              //                    event.setProperty(rt, "status",
-              //                    jsi::Value(1));
-              //                  } else if (participant.participantStatus ==
-              //                             EKParticipantStatusDeclined) {
-              //                    event.setProperty(rt, "status",
-              //                    jsi::Value(3));
-              //                  } else {
-              //                    event.setProperty(rt, "status",
-              //                    jsi::Value(0));
-              //                  }
-              //                }
-              //              }
-              //            }
-
-              //      NSLog(@"Event name %@ organizer %@", [[ekEvent title]
-              //      UTF],
-              //      [[ekEvent organizer] name]);
-
-              //      if([ekEvent organizer]) {
-              //        event.setProperty(rt, "status", jsi::Value(1));
-              //      }
-
-              //            event.setProperty(rt, "declined",
-              //            jsi::Value(hasDeclined));
-
-              events.setValueAtIndex(rt, i, event);
-            }
-
-            resolve->asObject(rt).asFunction(rt).call(rt, events);
-          });
-        } @catch (NSException *exception) {
-          NSLog(@"Error in getEvents: %@", exception);
-          invoker->invokeAsync([reject, exception, &rt]() mutable {
-            NSString *errorMessage = [NSString
-                stringWithFormat:@"Failed to fetch calendar events: %@",
-                                 [exception reason]];
-            auto error =
-                jsi::String::createFromUtf8(rt, [errorMessage UTF8String]);
-            reject->asObject(rt).asFunction(rt).call(rt, error);
-          });
-        }
-      });
-      return {};
-                                                }));
-
-    return promise;
-  });
-
-  auto getCalendars = HOSTFN("getCalendars", []) {
-    auto promiseCtr = rt.global().getPropertyAsFunction(rt, "Promise");
-    auto promise = promiseCtr.callAsConstructor(
-                                                rt, HOSTFN("executor", []) {
-      auto resolve = std::make_shared<jsi::Value>(rt, arguments[0]);
-      auto reject = std::make_shared<jsi::Value>(rt, arguments[1]);
-
-      dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0), ^{
-        @try {
-          NSArray<NSDictionary<NSString *, NSString *> *> *calendarEntries =
-              [calendarHelper getCalendars];
-
-          invoker->invokeAsync([resolve, calendarEntries = calendarEntries,
-                                &rt]() mutable {
-            auto calendars = jsi::Array(rt, calendarEntries.count);
-
-            for (int i = 0; i < calendarEntries.count; i++) {
-              NSDictionary<NSString *, NSString *> *calendarEntry =
-                  [calendarEntries objectAtIndex:i];
-              auto obj = jsi::Object(rt);
-
-              NSString *calendarId = [calendarEntry objectForKey:@"id"];
-              NSString *calendarTitle = [calendarEntry objectForKey:@"title"];
-
-              obj.setProperty(rt, "id", [calendarId UTF8String]);
-              obj.setProperty(rt, "title", [calendarTitle UTF8String]);
-
-              calendars.setValueAtIndex(rt, i, obj);
-            }
-
-            resolve->asObject(rt).asFunction(rt).call(rt, calendars);
-          });
-        } @catch (NSException *exception) {
-          NSLog(@"Error in getCalendars: %@", exception);
-          invoker->invokeAsync([reject, exception, &rt]() mutable {
-            NSString *errorMessage =
-                [NSString stringWithFormat:@"Failed to fetch calendars: %@",
-                                           [exception reason]];
-            auto error =
-                jsi::String::createFromUtf8(rt, [errorMessage UTF8String]);
-            reject->asObject(rt).asFunction(rt).call(rt, error);
-          });
-        }
-      });
-
-      return {};
-                                                }));
-
-    return promise;
-  });
-
-  auto focusDate = HOSTFN("focusDate", []) {
-    NSString *dateISO = sol::jsiValueToNSString(rt, arguments[0]);
-    [calendarHelper focusDate:dateISO];
-    return jsi::Value::undefined();
-  });
-
   auto ls = HOSTFN("ls", []) {
     NSString *path = sol::jsiValueToNSString(rt, arguments[0]);
     NSError *error;
@@ -854,13 +570,6 @@ void install(jsi::Runtime &rt,
   module.setProperty(rt, "removeIndexedPath", std::move(removeIndexedPath));
   module.setProperty(rt, "clearIndex", std::move(clearIndex));
   module.setProperty(rt, "indexPaths", std::move(indexPaths));
-  module.setProperty(rt, "requestCalendarAccess",
-                     std::move(requestCalendarAccess));
-  module.setProperty(rt, "getCalendarAuthorizationStatus",
-                     std::move(getCalendarAuthorizationStatus));
-  module.setProperty(rt, "getEvents", std::move(getEvents));
-  module.setProperty(rt, "getCalendars", std::move(getCalendars));
-  module.setProperty(rt, "focusDate", std::move(focusDate));
   module.setProperty(rt, "ls", std::move(ls));
   module.setProperty(rt, "exists", std::move(exists));
   module.setProperty(rt, "userName", std::move(userName));

@@ -3,7 +3,7 @@ import Chance from "chance";
 import { FileIcon } from "components/FileIcon";
 import { solNative } from "lib/SolNative";
 import { nanoid } from "nanoid";
-import { Clipboard, Linking, Text, View } from "react-native";
+import { Clipboard, Linking } from "react-native";
 import type { IRootStore } from "store";
 import { v4 as uuidv4 } from "uuid";
 import { systemPreferenceItems } from "./systemPreferences";
@@ -15,7 +15,7 @@ export function createBaseItems(store: IRootStore) {
 	const items: Item[] = [
 		{
 			id: "toggle_appearance",
-			iconImage: Assets.toggle,
+			symbol: "circle.lefthalf.filled",
 			name: "Toggle system appearance",
 			alias: "dark",
 			type: ItemType.CONFIGURATION,
@@ -25,7 +25,7 @@ export function createBaseItems(store: IRootStore) {
 		},
 		{
 			id: "sleep",
-			iconImage: Assets.SleepIcon,
+			symbol: "moon.zzz.fill",
 			name: "Sleep",
 			type: ItemType.CONFIGURATION,
 			callback: async () => {
@@ -40,7 +40,7 @@ export function createBaseItems(store: IRootStore) {
 		},
 		{
 			id: "restart",
-			iconImage: Assets.restart,
+			symbol: "arrow.clockwise",
 			name: "Restart",
 			preventClose: true,
 			type: ItemType.CONFIGURATION,
@@ -59,7 +59,7 @@ export function createBaseItems(store: IRootStore) {
 		},
 		{
 			id: "shut_down",
-			iconImage: Assets.power,
+			symbol: "power",
 			name: "Shut Down",
 			type: ItemType.CONFIGURATION,
 			preventClose: true,
@@ -78,7 +78,7 @@ export function createBaseItems(store: IRootStore) {
 		},
 		{
 			id: "airdrop",
-			iconImage: Assets.Airdrop,
+			symbol: "dot.radiowaves.up.forward",
 			name: "AirDrop",
 			type: ItemType.CONFIGURATION,
 			callback: () => {
@@ -104,7 +104,7 @@ export function createBaseItems(store: IRootStore) {
 		},
 		{
 			id: "lock",
-			iconImage: Assets.LockIcon,
+			symbol: "lock.fill",
 			name: "Lock",
 			type: ItemType.CONFIGURATION,
 			callback: async () => {
@@ -119,8 +119,8 @@ export function createBaseItems(store: IRootStore) {
 		},
 		{
 			id: "settings",
-			iconImage: Assets.SettingsIcon,
-			name: "Sol Settings",
+			symbol: "gearshape.fill",
+			name: "Radix Settings",
 			alias: "preferences",
 			type: ItemType.CONFIGURATION,
 			callback: () => {
@@ -129,8 +129,35 @@ export function createBaseItems(store: IRootStore) {
 			preventClose: true,
 		},
 		{
+			id: "grant_accessibility_access",
+			symbol: "accessibility",
+			name: "Grant Accessibility Access",
+			alias: "permission",
+			type: ItemType.CONFIGURATION,
+			callback: () => {
+				solNative.requestAccessibilityAccess();
+			},
+		},
+		{
+			id: "open_full_disk_access_settings",
+			symbol: "lock.shield.fill",
+			name: "Open Full Disk Access Settings",
+			alias: "permission",
+			type: ItemType.CONFIGURATION,
+			callback: () => {
+				Linking.openURL(
+					"x-apple.systempreferences:com.apple.preference.security?Privacy_AllFiles",
+				).catch((e) => {
+					solNative.showToast(
+						`Could not open Full Disk Access settings: ${e}`,
+						"error",
+					);
+				});
+			},
+		},
+		{
 			id: "create_shorcut",
-			icon: "🔗",
+			symbol: "link",
 			name: "Create Quick Link",
 			type: ItemType.CONFIGURATION,
 			callback: () => {
@@ -140,13 +167,7 @@ export function createBaseItems(store: IRootStore) {
 		},
 		{
 			id: "resize_fullscreen",
-			IconComponent: () => {
-				return (
-					<View className="w-6 h-6 p-0.5 rounded items-center bg-black">
-						<View className="w-5 h-5 rounded bg-white" />
-					</View>
-				);
-			},
+			symbol: "arrow.up.left.and.arrow.down.right",
 			name: "Resize window to full-screen",
 			type: ItemType.CONFIGURATION,
 			callback: () => {
@@ -155,13 +176,7 @@ export function createBaseItems(store: IRootStore) {
 		},
 		{
 			id: "resize_right_half",
-			IconComponent: () => {
-				return (
-					<View className="w-6 h-6 p-0.5 rounded items-end bg-black">
-						<View className="w-3 h-5 rounded-sm bg-white" />
-					</View>
-				);
-			},
+			symbol: "rectangle.righthalf.inset.filled",
 			name: "Resize window to right-half",
 			type: ItemType.CONFIGURATION,
 			callback: () => {
@@ -170,13 +185,7 @@ export function createBaseItems(store: IRootStore) {
 		},
 		{
 			id: "resize_left_half",
-			IconComponent: () => {
-				return (
-					<View className="w-6 h-6 p-0.5 rounded items-start bg-black">
-						<View className="w-[50%] h-5 rounded-sm bg-white" />
-					</View>
-				);
-			},
+			symbol: "rectangle.lefthalf.inset.filled",
 			name: "Resize window to left-half",
 			type: ItemType.CONFIGURATION,
 			callback: () => {
@@ -185,13 +194,7 @@ export function createBaseItems(store: IRootStore) {
 		},
 		{
 			id: "resize_top_half",
-			IconComponent: () => {
-				return (
-					<View className="w-6 h-6 p-0.5 rounded items-start bg-black">
-						<View className="w-5 h-[50%] rounded-sm bg-white" />
-					</View>
-				);
-			},
+			symbol: "rectangle.tophalf.inset.filled",
 			name: "Resize window to top-half",
 			type: ItemType.CONFIGURATION,
 			callback: () => {
@@ -200,13 +203,7 @@ export function createBaseItems(store: IRootStore) {
 		},
 		{
 			id: "resize_bottom_half",
-			IconComponent: () => {
-				return (
-					<View className="w-6 h-6 p-0.5 rounded justify-end bg-black">
-						<View className="w-5 h-[50%] rounded-sm bg-white" />
-					</View>
-				);
-			},
+			symbol: "rectangle.bottomhalf.inset.filled",
 			name: "Resize window to bottom-half",
 			type: ItemType.CONFIGURATION,
 			callback: () => {
@@ -215,13 +212,7 @@ export function createBaseItems(store: IRootStore) {
 		},
 		{
 			id: "resize_top_left",
-			IconComponent: () => {
-				return (
-					<View className="w-6 h-6 p-0.5 rounded items-start bg-black">
-						<View className="w-1 h-1 p-1 rounded-sm bg-white" />
-					</View>
-				);
-			},
+			symbol: "rectangle.inset.topleft.filled",
 			name: "Resize window to top-left",
 			type: ItemType.CONFIGURATION,
 			callback: () => {
@@ -230,13 +221,7 @@ export function createBaseItems(store: IRootStore) {
 		},
 		{
 			id: "resize_top_right",
-			IconComponent: () => {
-				return (
-					<View className="w-6 h-6 p-0.5 rounded items-end bg-black">
-						<View className="w-1 h-1 p-1 rounded-sm bg-white" />
-					</View>
-				);
-			},
+			symbol: "rectangle.inset.topright.filled",
 			name: "Resize window to top-right",
 			type: ItemType.CONFIGURATION,
 			callback: () => {
@@ -245,13 +230,7 @@ export function createBaseItems(store: IRootStore) {
 		},
 		{
 			id: "resize_bottom_left",
-			IconComponent: () => {
-				return (
-					<View className="w-6 h-6 p-0.5 rounded items-start justify-end bg-black">
-						<View className="w-1 h-1 p-1 rounded-sm bg-white" />
-					</View>
-				);
-			},
+			symbol: "rectangle.inset.bottomleft.filled",
 			name: "Resize window to bottom-left",
 			type: ItemType.CONFIGURATION,
 			callback: () => {
@@ -260,13 +239,7 @@ export function createBaseItems(store: IRootStore) {
 		},
 		{
 			id: "resize_bottom_right",
-			IconComponent: () => {
-				return (
-					<View className="w-6 h-6 p-0.5 rounded items-end justify-end bg-black">
-						<View className="w-1 h-1 p-1 rounded-sm bg-white" />
-					</View>
-				);
-			},
+			symbol: "rectangle.inset.bottomright.filled",
 			name: "Resize window to bottom-right",
 			type: ItemType.CONFIGURATION,
 			callback: () => {
@@ -275,13 +248,7 @@ export function createBaseItems(store: IRootStore) {
 		},
 		{
 			id: "resize_left_third",
-			IconComponent: () => {
-				return (
-					<View className="w-6 h-6 p-0.5 rounded items-start bg-black">
-						<View className="w-[33%] h-5 rounded-sm bg-white" />
-					</View>
-				);
-			},
+			symbol: "rectangle.leadingthird.inset.filled",
 			name: "Resize window to left third",
 			type: ItemType.CONFIGURATION,
 			callback: () => {
@@ -290,13 +257,7 @@ export function createBaseItems(store: IRootStore) {
 		},
 		{
 			id: "resize_center_third",
-			IconComponent: () => {
-				return (
-					<View className="w-6 h-6 p-0.5 rounded items-center bg-black">
-						<View className="w-[33%] h-5 rounded-sm bg-white" />
-					</View>
-				);
-			},
+			symbol: "rectangle.split.3x1",
 			name: "Resize window to center third",
 			type: ItemType.CONFIGURATION,
 			callback: () => {
@@ -305,13 +266,7 @@ export function createBaseItems(store: IRootStore) {
 		},
 		{
 			id: "resize_right_third",
-			IconComponent: () => {
-				return (
-					<View className="w-6 h-6 p-0.5 rounded items-end bg-black">
-						<View className="w-[33%] h-5 rounded-sm bg-white" />
-					</View>
-				);
-			},
+			symbol: "rectangle.trailingthird.inset.filled",
 			name: "Resize window to right third",
 			type: ItemType.CONFIGURATION,
 			callback: () => {
@@ -320,13 +275,7 @@ export function createBaseItems(store: IRootStore) {
 		},
 		{
 			id: "resize_left_two_thirds",
-			IconComponent: () => {
-				return (
-					<View className="w-6 h-6 p-0.5 rounded items-start bg-black">
-						<View className="w-[66%] h-5 rounded-sm bg-white" />
-					</View>
-				);
-			},
+			symbol: "rectangle.lefthalf.inset.filled.arrow.left",
 			name: "Resize window to left two-thirds",
 			type: ItemType.CONFIGURATION,
 			callback: () => {
@@ -335,13 +284,7 @@ export function createBaseItems(store: IRootStore) {
 		},
 		{
 			id: "resize_right_two_thirds",
-			IconComponent: () => {
-				return (
-					<View className="w-6 h-6 p-0.5 rounded items-end bg-black">
-						<View className="w-[66%] h-5 rounded-sm bg-white" />
-					</View>
-				);
-			},
+			symbol: "rectangle.righthalf.inset.filled.arrow.right",
 			name: "Resize window to right two-thirds",
 			type: ItemType.CONFIGURATION,
 			callback: () => {
@@ -350,13 +293,7 @@ export function createBaseItems(store: IRootStore) {
 		},
 		{
 			id: "move_next_screen",
-			IconComponent: () => {
-				return (
-					<View className="w-6 h-6 rounded items-center justify-center bg-black">
-						<Text className="text-white">→</Text>
-					</View>
-				);
-			},
+			symbol: "arrow.right.to.line",
 			name: "Move window to next screen",
 			type: ItemType.CONFIGURATION,
 			callback: () => {
@@ -365,13 +302,7 @@ export function createBaseItems(store: IRootStore) {
 		},
 		{
 			id: "move_previous_screen",
-			IconComponent: () => {
-				return (
-					<View className="w-6 h-6 rounded items-center justify-center bg-black">
-						<Text className="text-white">←</Text>
-					</View>
-				);
-			},
+			symbol: "arrow.left.to.line",
 			name: "Move window to previous screen",
 			type: ItemType.CONFIGURATION,
 			callback: () => {
@@ -380,7 +311,7 @@ export function createBaseItems(store: IRootStore) {
 		},
 		{
 			id: "move_to_previous_space",
-			icon: "⬅️",
+			symbol: "arrow.left.square",
 			name: "Move window to previous space",
 			type: ItemType.CONFIGURATION,
 			callback: () => {
@@ -389,7 +320,7 @@ export function createBaseItems(store: IRootStore) {
 		},
 		{
 			id: "move_to_next_space",
-			icon: "➡️",
+			symbol: "arrow.right.square",
 			name: "Move window to next space",
 			type: ItemType.CONFIGURATION,
 			callback: () => {
@@ -398,13 +329,7 @@ export function createBaseItems(store: IRootStore) {
 		},
 		{
 			id: "move_center",
-			IconComponent: () => {
-				return (
-					<View className="w-6 h-6 p-0.5 rounded items-center justify-center bg-black">
-						<View className="w-1 h-1 p-1 rounded-sm bg-white" />
-					</View>
-				);
-			},
+			symbol: "rectangle.center.inset.filled",
 			name: "Move window to center",
 			type: ItemType.CONFIGURATION,
 			callback: () => {
@@ -413,7 +338,7 @@ export function createBaseItems(store: IRootStore) {
 		},
 		{
 			id: "scratchpad",
-			icon: "🗒️",
+			symbol: "note.text",
 			name: "Scratchpad",
 			preventClose: true,
 			type: ItemType.CONFIGURATION,
@@ -422,27 +347,8 @@ export function createBaseItems(store: IRootStore) {
 			},
 		},
 		{
-			id: "emoji_picker",
-			icon: "😎",
-			name: "Emoji Picker",
-			preventClose: true,
-			type: ItemType.CONFIGURATION,
-			callback: () => {
-				store.ui.showEmojiPicker();
-			},
-		},
-		{
-			id: "check_for_updates",
-			icon: "🆙",
-			name: "Check for Sol updates",
-			type: ItemType.CONFIGURATION,
-			callback: () => {
-				solNative.checkForUpdates();
-			},
-		},
-		{
 			id: "clipboard_manager",
-			icon: "📋",
+			symbol: "clipboard",
 			name: "Clipboard Manager",
 			type: ItemType.CONFIGURATION,
 			callback: () => {
@@ -452,7 +358,7 @@ export function createBaseItems(store: IRootStore) {
 		},
 		{
 			id: "process_manager",
-			icon: "🔫",
+			symbol: "xmark.octagon",
 			name: "Kill process",
 			type: ItemType.CONFIGURATION,
 			callback: () => {
@@ -462,7 +368,7 @@ export function createBaseItems(store: IRootStore) {
 		},
 		{
 			id: "file_search",
-			icon: "📁",
+			symbol: "magnifyingglass",
 			name: "File Search",
 			type: ItemType.CONFIGURATION,
 			callback: () => {
@@ -605,7 +511,7 @@ export function createBaseItems(store: IRootStore) {
 		},
 		{
 			id: "generate_nano_id",
-			icon: "🍔",
+			symbol: "number",
 			name: "Generate Nano ID",
 			type: ItemType.CONFIGURATION,
 			callback: async () => {
@@ -616,7 +522,7 @@ export function createBaseItems(store: IRootStore) {
 		},
 		{
 			id: "generate_uuid",
-			icon: "🍔",
+			symbol: "number.square",
 			name: "Generate UUID",
 			type: ItemType.CONFIGURATION,
 			callback: async () => {
@@ -627,7 +533,7 @@ export function createBaseItems(store: IRootStore) {
 		},
 		{
 			id: "generate_lorem_ipsum",
-			icon: "👴",
+			symbol: "text.alignleft",
 			name: "Generate Lorem Ipsum",
 			type: ItemType.CONFIGURATION,
 			callback: async () => {
@@ -638,8 +544,8 @@ export function createBaseItems(store: IRootStore) {
 		},
 		{
 			id: "quit_sol",
-			icon: "💀",
-			name: "Quit/Exit Sol",
+			symbol: "xmark.circle.fill",
+			name: "Quit/Exit Radix",
 			alias: "exit",
 			type: ItemType.CONFIGURATION,
 			callback: async () => {
@@ -648,7 +554,7 @@ export function createBaseItems(store: IRootStore) {
 		},
 		{
 			id: "paste_as_json",
-			icon: "📟",
+			symbol: "curlybraces",
 			name: "Paste as JSON",
 			type: ItemType.CONFIGURATION,
 			callback: async () => {
@@ -668,7 +574,7 @@ export function createBaseItems(store: IRootStore) {
 		},
 		{
 			id: "kill_all_apps",
-			icon: "☠️",
+			symbol: "xmark.app",
 			name: "Kill all apps",
 			type: ItemType.CONFIGURATION,
 			callback: async () => {
@@ -700,7 +606,7 @@ export function createBaseItems(store: IRootStore) {
 		...systemPreferenceItems,
 		{
 			id: "copy_wifi_password",
-			icon: "🔑",
+			symbol: "key.fill",
 			name: "Copy Wi-Fi Password to Clipboard",
 			type: ItemType.CONFIGURATION,
 			alias: "wifi",
@@ -720,7 +626,7 @@ export function createBaseItems(store: IRootStore) {
 		},
 		{
 			id: "reveal_wifi_password",
-			icon: "📶",
+			symbol: "qrcode",
 			name: "Reveal Wi-Fi Password",
 			type: ItemType.CONFIGURATION,
 			alias: "wifi",
@@ -741,7 +647,7 @@ export function createBaseItems(store: IRootStore) {
 		},
 		{
 			id: "empty_trash",
-			icon: "🗑️",
+			symbol: "trash.fill",
 			name: "Empty Trash",
 			type: ItemType.CONFIGURATION,
 			preventClose: true,
@@ -761,7 +667,7 @@ export function createBaseItems(store: IRootStore) {
 		},
 		{
 			id: "hide_notch",
-			icon: "🕶️",
+			symbol: "rectangle.topthird.inset.filled",
 			name: "Hide/Restore Notch",
 			type: ItemType.CONFIGURATION,
 			callback: async () => {
@@ -789,21 +695,8 @@ export function createBaseItems(store: IRootStore) {
 
 	if (__DEV__) {
 		items.push({
-			id: "restart_onboarding",
-			icon: "🐣",
-			name: "[DEV] Restart onboarding",
-			type: ItemType.CONFIGURATION,
-			callback: () => {
-				store.ui.onboardingStep = "v1_start";
-				store.ui.focusWidget(Widget.ONBOARDING);
-				store.ui.setHasDismissedGettingStarted(false);
-			},
-			preventClose: true,
-		});
-
-		items.push({
 			id: "sucess_toast",
-			icon: "🍞",
+			symbol: "checkmark.circle",
 			name: "Success toast",
 			type: ItemType.CONFIGURATION,
 			preventClose: true,
@@ -816,7 +709,7 @@ export function createBaseItems(store: IRootStore) {
 		});
 		items.push({
 			id: "error_toast",
-			icon: "🍞",
+			symbol: "exclamationmark.triangle",
 			name: "error toast",
 			type: ItemType.CONFIGURATION,
 			callback: () => {

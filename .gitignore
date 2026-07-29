@@ -44,17 +44,6 @@ node_modules/
 npm-debug.log
 yarn-error.log
 
-# fastlane
-#
-# It is recommended to not store the screenshots in the git repo. Instead, use fastlane to re-generate the
-# screenshots whenever they are needed.
-# For more information about the recommended setup visit:
-# https://docs.fastlane.tools/best-practices/source-control/
-
-*/fastlane/report.xml
-*/fastlane/Preview.html
-*/fastlane/screenshots
-
 # Bundle artifact
 *.jsbundle
 
@@ -62,20 +51,12 @@ yarn-error.log
 /ios/Pods/
 env.json
 
-# Fastlane
-/fastlane/report.xml
-
 # Built binaries
-**/Sol.app
-**/Sol.app.zip
+**/Radix.app
+**/Radix-debug.app
 
 vendor
 
 # Temporary files created by Metro to check the health of the file watcher
 .metro-health-check*
 
-src/env.ts
-Sol.app.zip
-Sol.app copy.zip
-sentry.properties
-releases/*.zip

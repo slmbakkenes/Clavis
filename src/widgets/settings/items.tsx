@@ -4,6 +4,7 @@ import clsx from 'clsx'
 import Favicon from 'components/Favicon'
 import { FileIcon } from 'components/FileIcon'
 import { MySwitch } from 'components/MySwitch'
+import { SFSymbol } from 'components/SFSymbol'
 import { renderToKeys } from 'lib/shortcuts'
 import { observer } from 'mobx-react-lite'
 import {
@@ -62,7 +63,17 @@ const RenderItem = observer(({ item, index }: any) => {
       {!!item.url && item.type != ItemType.BOOKMARK && (
         <FileIcon url={item.url} className={'w-6 h-6'} />
       )}
-      {item.type !== ItemType.CUSTOM && !!item.icon && <Text>{item.icon}</Text>}
+      {!!item.symbol && (
+        <SFSymbol
+          name={item.symbol}
+          weight={item.symbolWeight ?? 'regular'}
+          size={16}
+          className="w-6 h-6"
+        />
+      )}
+      {!item.symbol && item.type !== ItemType.CUSTOM && !!item.icon && (
+        <Text>{item.icon}</Text>
+      )}
       {item.type === ItemType.CUSTOM && !!item.icon && (
         <View className="w-6 h-6 rounded items-center justify-center bg-white dark:bg-black">
           {/* @ts-expect-error */}

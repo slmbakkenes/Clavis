@@ -52,12 +52,6 @@ export const Sidebar = ({
 				onPress={() => setSelected("SCRIPTS")}
 				title="Scripts"
 			/>
-			<SelectableButton
-				icon={Assets.Calendar}
-				selected={selected === "CALENDARS"}
-				onPress={() => setSelected("CALENDARS")}
-				title="Calendars"
-			/>
 		</View>
 	);
 };

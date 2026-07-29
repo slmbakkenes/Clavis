@@ -1,6 +1,7 @@
 #ifndef JSIUtils_h
 #define JSIUtils_h
 
+#import <Foundation/Foundation.h>
 #import <jsi/jsi.h>
 
 namespace sol {

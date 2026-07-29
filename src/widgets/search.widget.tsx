@@ -6,6 +6,7 @@ import { FileIcon } from "components/FileIcon";
 import { Key } from "components/Key";
 import { LoadingBar } from "components/LoadingBar";
 import { MainInput } from "components/MainInput";
+import { SFSymbol } from "components/SFSymbol";
 import { renderToKeys } from "lib/shortcuts";
 import { observer } from "mobx-react-lite";
 import { type FC, useEffect, useRef } from "react";
@@ -150,7 +151,16 @@ const ItemRow = observer(({ item, index }: { item: Item; index: number }) => {
 				{!!item.url && item.type !== ItemType.BOOKMARK && (
 					<FileIcon url={item.url} className={"w-6 h-6"} />
 				)}
-				{item.type !== ItemType.CUSTOM && !!item.icon && (
+				{!!item.symbol && (
+					<SFSymbol
+						name={item.symbol}
+						weight={item.symbolWeight ?? "regular"}
+						size={16}
+						color={isActive ? "#FFFFFF" : undefined}
+						className="w-6 h-6"
+					/>
+				)}
+				{!item.symbol && item.type !== ItemType.CUSTOM && !!item.icon && (
 					<Text>{item.icon}</Text>
 				)}
 				{item.type === ItemType.CUSTOM && !!item.icon && (

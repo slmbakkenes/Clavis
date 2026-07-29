@@ -11,7 +11,7 @@ import {
 	writeJsonRuntimeState,
 } from "./config";
 
-export type PersistedStoreKey = "calendar" | "clipboard" | "emoji";
+export type PersistedStoreKey = "clipboard";
 
 type PersistedConfig = Record<string, any>;
 type PortableConfigState = Partial<Record<PortableKey, any>>;
@@ -20,9 +20,7 @@ type UIPersistedState = Partial<Record<UIPersistedKey, any>>;
 type RuntimeState = RuntimeConfigState & Partial<Record<PersistedStoreKey, any>>;
 
 const PERSISTED_STORE_KEYS: PersistedStoreKey[] = [
-	"calendar",
 	"clipboard",
-	"emoji",
 ];
 
 const getPersistedConfig = (): PersistedConfig => {

@@ -1,4 +1,3 @@
-import EventKit
 
 struct AppleScriptHelper {
 

@@ -1,4 +1,3 @@
-#import "CalendarHelper.h"
 #import "MediaKeyForwarder.h"
 #import "NSString+Score.h"
 #import <AppKit/AppKit.h>

@@ -57,10 +57,6 @@ declare const global: {
 		startWatchingPaths: (paths: string[]) => void;
 		removeIndexedPath: (path: string) => Promise<void>;
 		clearIndex: () => void;
-		requestCalendarAccess: () => Promise<void>;
-		getCalendarAuthorizationStatus: () => CalendarAuthorizationStatus;
-		getEvents: (calendarIds?: string[]) => Promise<INativeEvent[]>;
-		getCalendars: () => Promise<INativeCalendar[]>;
 		ls: (path: string) => string[];
 		exists: (path: string) => boolean;
 		readFile: (path: string) => string | null;
@@ -91,7 +87,6 @@ declare const global: {
 			) => void,
 			// biome-ignore lint/complexity/noBannedTypes: reason
 		) => Object;
-		focusDate: (dateISO: string) => void;
 	};
 };
 
@@ -128,6 +123,18 @@ interface ITrackingProject {
 type Item = {
 	id: string;
 	icon?: string;
+	/** SF Symbol name, preferred over `icon`/`iconImage` when present. */
+	symbol?: string;
+	symbolWeight?:
+		| "ultraLight"
+		| "thin"
+		| "light"
+		| "regular"
+		| "medium"
+		| "semibold"
+		| "bold"
+		| "heavy"
+		| "black";
 	iconImage?: any;
 	faviconFallback?: any;
 	IconComponent?: FC<any>;
@@ -148,9 +155,3 @@ type Item = {
 	bookmarkFolder?: null | string; // only bookmarks have this
 };
 
-type OnboardingStep =
-	| "v1_start"
-	| "v1_shortcut"
-	| "v1_quick_actions"
-	| "v1_skipped"
-	| "v1_completed";

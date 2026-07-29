@@ -6,14 +6,8 @@ import { MySwitch } from "components/MySwitch";
 import { solNative } from "lib/SolNative";
 import { observer } from "mobx-react-lite";
 import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { isValidCustomSearchEngineUrl } from "lib/search";
 import { useStore } from "store";
-
-export const isValidCustomSearchEngineUrl = (url: string) => {
-	if (url.trim() === "") return false;
-	const searchPatternRegex =
-		/^https?:\/\/(?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?|localhost|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(:\d+)?(\/[^\s?#]*)?\?[\w-]+=%s$/;
-	return searchPatternRegex.test(url);
-};
 
 export const General = observer(() => {
 	const store = useStore();
@@ -28,7 +22,7 @@ export const General = observer(() => {
 				<View className="flex-1">
 					<Text className="text-sm text">Open at Login</Text>
 					<Text className="text-xxs text-neutral-500 dark:text-neutral-400">
-						Launch Sol when your computer starts
+						Launch Radix when your computer starts
 					</Text>
 				</View>
 				<MySwitch
@@ -176,27 +170,12 @@ export const General = observer(() => {
 					/>
 				</View>
 				<View className="border-t border-lightBorder dark:border-darkBorder z-0" />
-				<View className="flex-row items-center">
-					<Text className="flex-1">Show In-App Calendar</Text>
-					<MySwitch
-						value={store.ui.calendarEnabled}
-						onValueChange={store.ui.setCalendarEnabled}
-					/>
-				</View>
 				<View className="border-t border-lightBorder dark:border-darkBorder" />
 				<View className="flex-row items-center">
 					<Text className="flex-1">Show Browser Bookmarks</Text>
 					<MySwitch
 						value={store.ui.showInAppBrowserBookMarks}
 						onValueChange={store.ui.setShowInAppBrowserBookmarks}
-					/>
-				</View>
-				<View className="border-t border-lightBorder dark:border-darkBorder" />
-				<View className="flex-row items-center">
-					<Text className="flex-1">Show upcoming event in Menu Bar</Text>
-					<MySwitch
-						value={store.ui.showUpcomingEvent}
-						onValueChange={store.ui.setShowUpcomingEvent}
 					/>
 				</View>
 				<View className="border-t border-lightBorder dark:border-darkBorder" />
@@ -224,7 +203,7 @@ export const General = observer(() => {
 				<View className="flex-1">
 					<Text className="text-sm text">Reload Config</Text>
 					<Text className="text-xxs text-neutral-500 dark:text-neutral-400">
-						Re-read ~/.config/sol/config.json
+						Re-read ~/.config/radix/config.json
 					</Text>
 				</View>
 				<TouchableOpacity onPress={() => store.ui.reloadJsonConfig()}>

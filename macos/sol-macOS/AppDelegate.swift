@@ -1,18 +1,15 @@
-import EventKit
 import Foundation
 import React_RCTAppDelegate
-import Sparkle
 
 @NSApplicationMain
 @objc
 class AppDelegate: RCTAppDelegate {
-  private var updaterController: SPUStandardUpdaterController!
   private var mediaKeyForwarder: MediaKeyForwarder!
   private let imagesPasteboardDirectory: URL = {
     let home = FileManager.default.homeDirectoryForCurrentUser
     return home
       .appendingPathComponent(".config", isDirectory: true)
-      .appendingPathComponent("sol", isDirectory: true)
+      .appendingPathComponent("radix", isDirectory: true)
       .appendingPathComponent("images_pasteboard", isDirectory: true)
   }()
   private let supportedClipboardImageTypes: [(type: NSPasteboard.PasteboardType, ext: String)] = [
@@ -23,11 +20,6 @@ class AppDelegate: RCTAppDelegate {
   private let supportedImageFileExtensions = Set(["png", "jpg", "jpeg"])
 
   override init() {
-    updaterController = SPUStandardUpdaterController(
-      startingUpdater: true,
-      updaterDelegate: nil,
-      userDriverDelegate: nil
-    )
     super.init()
   }
 
@@ -66,13 +58,13 @@ class AppDelegate: RCTAppDelegate {
   }
 
   override func applicationDidFinishLaunching(_ notification: Notification) {
-    self.moduleName = "sol"
+    self.moduleName = "radix"
     self.initialProps = [:]
     self.automaticallyLoadReactNativeWindow = false
 
     super.applicationDidFinishLaunching(notification)
 
-    let rootView = self.rootViewFactory().view(withModuleName: "sol")
+    let rootView = self.rootViewFactory().view(withModuleName: "radix")
 
     PanelManager.shared.setRootView(rootView)
 
@@ -83,12 +75,6 @@ class AppDelegate: RCTAppDelegate {
     PanelManager.shared.showWindow()
   }
 
-  func checkForUpdates() {
-    DispatchQueue.main.async {
-      self.updaterController.checkForUpdates(self)
-    }
-  }
-
   func setupPasteboardListener() {
     createImagesPasteboardDirectoryIfNeeded()
 
@@ -97,7 +83,7 @@ class AppDelegate: RCTAppDelegate {
       let bundle = $1?.bundle
 
       // Prioritize image payloads over string payloads so copied images are
-      // persisted and surfaced in Sol clipboard history.
+      // persisted and surfaced in Radix clipboard history.
       if self.persistClipboardImageIfNeeded(from: pasteboard, bundle: bundle) {
         return
       }

@@ -64,7 +64,6 @@ export const defaultShortcuts = {
   move_next_screen: 'control+option+command+right',
   move_previous_screen: 'control+option+command+left',
   scratchpad: 'command+shift+space',
-  emoji_picker: 'command+control+space',
   clipboard_manager: 'command+option+v',
 }
 

@@ -1,6 +1,6 @@
 import { solNative } from "../lib/SolNative";
 
-const CONFIG_DIRECTORY_PATH = `/Users/${solNative.userName()}/.config/sol`;
+const CONFIG_DIRECTORY_PATH = `/Users/${solNative.userName()}/.config/radix`;
 const SCRIPTS_DIRECTORY_PATH = `${CONFIG_DIRECTORY_PATH}/scripts`;
 
 export const PORTABLE_KEYS = [
@@ -9,18 +9,14 @@ export const PORTABLE_KEYS = [
 	"thirdTranslationLanguage",
 	"globalShortcut",
 	"showWindowOn",
-	"calendarEnabled",
-	"showAllDayEvents",
 	"launchAtLogin",
 	"mediaKeyForwardingEnabled",
-	"showUpcomingEvent",
 	"scratchPadColor",
 	"searchFolders",
 	"searchEngine",
 	"customSearchUrl",
 	"shortcuts",
 	"showInAppBrowserBookMarks",
-	"hasDismissedGettingStarted",
 	"hyperKeyEnabled",
 	"customItems",
 	"disabledItemIds",
@@ -31,7 +27,6 @@ export const RUNTIME_CONFIG_KEYS = [
 	"selectionTimestamps",
 	"history",
 	"note",
-	"onboardingStep",
 ] as const;
 
 export const UI_PERSISTED_KEYS = [

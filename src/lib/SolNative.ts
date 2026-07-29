@@ -4,8 +4,6 @@ class SolNative extends NativeEventEmitter {
 	openFile: (path: string) => void;
 	openWithFinder: (path: string) => void;
 	hideWindow: typeof global.__SolProxy.hideWindow;
-	getEvents: typeof global.__SolProxy.getEvents;
-	getCalendars: typeof global.__SolProxy.getCalendars;
 	getApps: () => Promise<
 		Array<{ name: string; url: string; isRunning: boolean }>
 	>;
@@ -23,8 +21,6 @@ class SolNative extends NativeEventEmitter {
 		| undefined
 	>;
 	setGlobalShortcut: (key: "command" | "option" | "control") => void;
-	getCalendarAuthorizationStatus: typeof global.__SolProxy.getCalendarAuthorizationStatus;
-	requestCalendarAccess: () => Promise<void>;
 	requestAccessibilityAccess: () => Promise<void>;
 	setLaunchAtLogin: (v: boolean) => void;
 	getAccessibilityStatus: () => Promise<boolean>;
@@ -48,7 +44,6 @@ class SolNative extends NativeEventEmitter {
 	turnOffVerticalArrowsListeners: () => void;
 	turnOnEnterListener: () => void;
 	turnOffEnterListener: () => void;
-	checkForUpdates: () => void;
 	setWindowRelativeSize: (relativeSize: number) => void;
 	resetWindowSize: typeof global.__SolProxy.resetWindowSize;
 	setWindowHeight: typeof global.__SolProxy.setHeight;
@@ -106,8 +101,6 @@ class SolNative extends NativeEventEmitter {
 	cp: typeof global.__SolProxy.cp;
 	del: typeof global.__SolProxy.del;
 	createFolderWatcher: typeof global.__SolProxy.createFolderWatcher;
-	focusDate: (dateISO: string) => void;
-	setUpcomingEventEnabled: (enabled: boolean) => void;
 
 	// Constants
 	accentColor: string;
@@ -124,8 +117,6 @@ class SolNative extends NativeEventEmitter {
 			}
 		}
 
-		this.getEvents = global.__SolProxy.getEvents;
-		this.getCalendars = global.__SolProxy.getCalendars;
 		this.getApps = module.getApps;
 		this.openFile = module.openFile;
 		this.toggleDarkMode = module.toggleDarkMode;
@@ -134,10 +125,7 @@ class SolNative extends NativeEventEmitter {
 		this.openWithFinder = module.openWithFinder;
 		this.getMediaInfo = module.getMediaInfo;
 		this.setGlobalShortcut = module.setGlobalShortcut;
-		this.getCalendarAuthorizationStatus =
-			global.__SolProxy.getCalendarAuthorizationStatus;
 		this.requestAccessibilityAccess = module.requestAccessibilityAccess;
-		this.requestCalendarAccess = global.__SolProxy.requestCalendarAccess;
 		this.setLaunchAtLogin = module.setLaunchAtLogin;
 		this.getAccessibilityStatus = module.getAccessibilityStatus;
 		this.resizeFrontmostRightHalf = module.resizeFrontmostRightHalf;
@@ -158,7 +146,6 @@ class SolNative extends NativeEventEmitter {
 			module.turnOffHorizontalArrowsListeners;
 		this.turnOnVerticalArrowsListeners = module.turnOnVerticalArrowsListeners;
 		this.turnOffVerticalArrowsListeners = module.turnOffVerticalArrowsListeners;
-		this.checkForUpdates = module.checkForUpdates;
 		this.turnOnEnterListener = module.turnOnEnterListener;
 		this.turnOffEnterListener = module.turnOffEnterListener;
 		this.setWindowRelativeSize = module.setWindowRelativeSize;
@@ -234,8 +221,6 @@ class SolNative extends NativeEventEmitter {
 		this.getApplications = global.__SolProxy.getApplications;
 		this.setHyperKeyEnabled = module.setHyperKeyEnabled;
 		this.createFolderWatcher = global.__SolProxy.createFolderWatcher;
-		this.focusDate = global.__SolProxy.focusDate;
-		this.setUpcomingEventEnabled = module.setUpcomingEventEnabled;
 	}
 }
 

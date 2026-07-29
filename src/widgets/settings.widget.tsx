@@ -4,20 +4,13 @@ import { type FC, useState } from "react";
 import { View } from "react-native";
 import { useStore } from "store";
 import { About } from "./settings/about";
-import { Calendars } from "./settings/calendars";
 import { General } from "./settings/general";
 import { Items } from "./settings/items";
 import { Scripts } from "./settings/scripts";
 import { Sidebar } from "./settings/sidebar";
 import { Translate } from "./settings/translate";
 
-type ITEM =
-	| "ABOUT"
-	| "GENERAL"
-	| "TRANSLATE"
-	| "ITEMS"
-	| "SCRIPTS"
-	| "CALENDARS";
+type ITEM = "ABOUT" | "GENERAL" | "TRANSLATE" | "ITEMS" | "SCRIPTS";
 
 export const SettingsWidget: FC = observer(() => {
 	const store = useStore();
@@ -31,7 +24,6 @@ export const SettingsWidget: FC = observer(() => {
 				{selected === "ITEMS" && <Items />}
 				{selected === "TRANSLATE" && <Translate />}
 				{selected === "SCRIPTS" && <Scripts />}
-				{selected === "CALENDARS" && <Calendars />}
 				{selected === "ABOUT" && <About />}
 			</View>
 			{showKeyboardRecorder && (

@@ -14,17 +14,17 @@ class FileSearchIndex {
   
   private var db: OpaquePointer?
   private let dbPath: String
-  private let queue = DispatchQueue(label: "com.ospfranco.sol.filesearch.index")
+  private let queue = DispatchQueue(label: "com.svenbakkenes.radix.filesearch.index")
   
   init() {
     let paths = NSSearchPathForDirectoriesInDomains(.applicationSupportDirectory, .userDomainMask, true)
     let appSupportDir = paths[0]
-    let solDir = (appSupportDir as NSString).appendingPathComponent("Sol")
+    let appDir = (appSupportDir as NSString).appendingPathComponent("Radix")
     
     // Create directory if it doesn't exist
-    try? FileManager.default.createDirectory(atPath: solDir, withIntermediateDirectories: true)
+    try? FileManager.default.createDirectory(atPath: appDir, withIntermediateDirectories: true)
     
-    self.dbPath = (solDir as NSString).appendingPathComponent("filesearch.db")
+    self.dbPath = (appDir as NSString).appendingPathComponent("filesearch.db")
     
     self.initializeDatabase()
   }

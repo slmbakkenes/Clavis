@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Sol</string>
+	<string>$(PRODUCT_NAME)</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -19,9 +19,9 @@
 	<key>CFBundlePackageType</key>
 	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2.1.348</string>
+	<string>1.0.0</string>
 	<key>CFBundleVersion</key>
-	<string>557</string>
+	<string>1</string>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.productivity</string>
 	<key>LSMinimumSystemVersion</key>
@@ -42,11 +42,7 @@
 		</dict>
 	</dict>
 	<key>NSAppleEventsUsageDescription</key>
-	<string>Sol needs permision to execute apple scripts</string>
-	<key>NSCalendarsFullAccessUsageDescription</key>
-	<string>Sol needs permission to display your appointments</string>
-	<key>NSCalendarsUsageDescription</key>
-	<string>Sol needs permission to display your appointments</string>
+	<string>Radix needs permission to execute AppleScripts</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Allow location access to show Wi-Fi password</string>
 	<key>NSLocationAlwaysUsageDescription</key>
@@ -62,12 +58,8 @@
 	<key>NSSupportsSuddenTermination</key>
 	<true/>
 	<key>NSSystemAdministrationUsageDescription</key>
-	<string>Sol needs permissions to read bookmarks and other files</string>
+	<string>Radix needs permission to read bookmarks and other files</string>
 	<key>RCTNewArchEnabled</key>
 	<true/>
-	<key>SUFeedURL</key>
-	<string>https://raw.githubusercontent.com/ospfranco/sol/main/releases/appcast.xml</string>
-	<key>SUPublicEDKey</key>
-	<string>K+wkzEuPN5g0KIQQTxQIVrZAWfMoowpia/yAopR7sMk=</string>
 </dict>
 </plist>
