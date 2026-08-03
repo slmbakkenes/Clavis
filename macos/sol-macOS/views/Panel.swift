@@ -35,6 +35,12 @@ final class Panel: NSPanel, NSWindowDelegate {
     self.contentView!.wantsLayer = true
   }
 
+  /// AppKit otherwise clamps the frame to the screen the panel currently sits
+  /// on, which blocks moving it to another display.
+  override func constrainFrameRect(_ frameRect: NSRect, to screen: NSScreen?) -> NSRect {
+    return frameRect
+  }
+
   override var canBecomeKey: Bool {
     return true
   }

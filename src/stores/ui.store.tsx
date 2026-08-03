@@ -251,7 +251,7 @@ export const createUIStore = (root: IRootStore) => {
 				store.thirdTranslationLanguage = src.thirdTranslationLanguage ?? null;
 				store.customItems = src.customItems ?? [];
 				store.globalShortcut = src.globalShortcut ?? "option";
-				store.showWindowOn = src.showWindowOn ?? "screenWithFrontmost";
+				store.showWindowOn = src.showWindowOn ?? "screenWithCursor";
 				store.launchAtLogin = src.launchAtLogin ?? true;
 				store.mediaKeyForwardingEnabled = src.mediaKeyForwardingEnabled ?? true;
 				store.scratchPadColor = src.scratchPadColor ?? ScratchPadColor.SYSTEM;
@@ -363,7 +363,7 @@ export const createUIStore = (root: IRootStore) => {
 		globalShortcut: "option" as "command" | "option" | "control",
 		scratchpadShortcut: "command" as "command" | "option" | "none",
 		clipboardManagerShortcut: "shift" as "shift" | "option" | "none",
-		showWindowOn: "screenWithFrontmost" as
+		showWindowOn: "screenWithCursor" as
 			| "screenWithFrontmost"
 			| "screenWithCursor",
 		query: "",

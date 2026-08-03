@@ -161,11 +161,11 @@ export const General = observer(() => {
 							store.ui.setShowWindowOn(v as any);
 						}}
 						options={[
+							{ label: "Cursor Screen", value: "screenWithCursor" as const },
 							{
 								label: "Frontmost Window",
 								value: "screenWithFrontmost" as const,
 							},
-							{ label: "Cursor Screen", value: "screenWithCursor" as const },
 						]}
 					/>
 				</View>

@@ -5,9 +5,13 @@ enum PreferredScreen {
 
 @objc class PanelManager: NSObject {
   let baseSize = NSSize(width: 700, height: 450)
-  public var preferredScreen: PreferredScreen = .frontmost
+  public var preferredScreen: PreferredScreen = .withMouse
   private let mainWindow: Panel = Panel(contentRect: .zero)
   private var rootView: NSView?
+  private let screenDetector = ScreenDetector()
+  /// Screen the panel was last shown on, kept so that resizes triggered after
+  /// the panel is up don't drag it back to another display.
+  private var targetScreen: NSScreen?
 
   @objc static public let shared = PanelManager()
 
@@ -19,17 +23,12 @@ enum PreferredScreen {
   @objc func showWindow(target: String? = nil) {
     HotKeyManager.shared.settingsHotKey.isPaused = false
 
-    guard
-      let screen =
-        (preferredScreen == .frontmost ? getFrontmostScreen() : getScreenWithMouse())
-    else {
+    guard let screen = resolveScreen() else {
       return
     }
 
-    let yOffset = screen.visibleFrame.height * 0.3
-    let x = screen.visibleFrame.midX - baseSize.width / 2
-    let y = screen.visibleFrame.midY - mainWindow.frame.height + yOffset
-    mainWindow.setFrameOrigin(NSPoint(x: floor(x), y: floor(y)))
+    targetScreen = screen
+    mainWindow.setFrame(frameFor(screen: screen, size: mainWindow.frame.size), display: false)
 
     mainWindow.setIsVisible(true)
 
@@ -40,16 +39,17 @@ enum PreferredScreen {
 
   @objc func hideWindow() {
     mainWindow.setIsVisible(false)
+    targetScreen = nil
     SolEmitter.sharedInstance.onHide()
     HotKeyManager.shared.settingsHotKey.isPaused = true
   }
 
   @objc func resetSize() {
-    let origin = CGPoint(x: 0, y: 0)
-    let size = baseSize
-    let frame = NSRect(origin: origin, size: size)
-    mainWindow.setFrame(frame, display: false)
-    mainWindow.center()
+    guard let screen = getPreferredScreen() else {
+      return
+    }
+
+    mainWindow.setFrame(frameFor(screen: screen, size: baseSize), display: false)
   }
 
   @objc func setHeight(_ height: Int) {
@@ -58,19 +58,18 @@ enum PreferredScreen {
       finalHeight = Int(baseSize.height)
     }
 
-    let size = NSSize(width: Int(baseSize.width), height: finalHeight)
-    guard
-      let screen =
-        (preferredScreen == .frontmost ? getFrontmostScreen() : getScreenWithMouse())
-    else {
+    let size = NSSize(width: baseSize.width, height: CGFloat(finalHeight))
+    guard let screen = getPreferredScreen() else {
       return
     }
 
-    let yOffset = screen.visibleFrame.height * 0.3
-    let y = screen.visibleFrame.midY - CGFloat(finalHeight) + yOffset
+    // Preserve a horizontal drag by the user, but only while the panel is
+    // still on the screen we're positioning against.
+    var frame = frameFor(screen: screen, size: size)
+    if screen.frame.intersects(mainWindow.frame) {
+      frame.origin.x = mainWindow.frame.minX
+    }
 
-    let frame = NSRect(
-      x: mainWindow.frame.minX, y: y, width: baseSize.width, height: CGFloat(finalHeight))
     self.mainWindow.setFrame(frame, display: true)
 
     self.rootView?.setFrameSize(size)
@@ -79,19 +78,17 @@ enum PreferredScreen {
   }
 
   @objc func setRelativeSize(_ proportion: Double) {
-    guard let screenSize = NSScreen.main?.frame.size else {
+    guard let screen = getPreferredScreen() else {
       return
     }
 
-    let origin = CGPoint(x: 0, y: 0)
+    let screenSize = screen.frame.size
     let size = CGSize(
       width: screenSize.width * CGFloat(proportion),
       height: screenSize.height * CGFloat(proportion)
     )
 
-    let frame = NSRect(origin: origin, size: size)
-    mainWindow.setFrame(frame, display: false)
-    mainWindow.center()
+    mainWindow.setFrame(frameFor(screen: screen, size: size), display: false)
   }
 
   func toggle() {
@@ -107,11 +104,51 @@ enum PreferredScreen {
   }
 
   func getPreferredScreen() -> NSScreen? {
-    return self.preferredScreen == .frontmost ? getFrontmostScreen() : getScreenWithMouse()
+    return targetScreen ?? resolveScreen()
   }
 
   func getFrontmostScreen() -> NSScreen? {
-    return mainWindow.screen ?? NSScreen.main
+    let screens = NSScreen.screens
+    if screens.count <= 1 {
+      return screens.first
+    }
+
+    // While the panel is up it is the frontmost window, so asking the
+    // accessibility API would just point back at ourselves.
+    if mainWindow.isVisible,
+      NSWorkspace.shared.frontmostApplication?.processIdentifier == getpid()
+    {
+      return mainWindow.screen ?? NSScreen.main
+    }
+
+    if let frontmostWindow = AccessibilityElement.frontmostWindow() {
+      let rect = frontmostWindow.rectOfElement()
+      if !rect.isEmpty,
+        let screen = screenDetector.screenContaining(rect, screens: screens)
+      {
+        return screen
+      }
+    }
+
+    // No accessibility permission or no window to go by.
+    return NSScreen.main ?? getScreenWithMouse() ?? screens.first
   }
 
+  private func resolveScreen() -> NSScreen? {
+    switch preferredScreen {
+    case .withMouse:
+      return getScreenWithMouse() ?? getFrontmostScreen()
+    case .frontmost:
+      return getFrontmostScreen()
+    }
+  }
+
+  /// Panel frame for `size`, horizontally centered and slightly above the
+  /// vertical center of `screen`.
+  private func frameFor(screen: NSScreen, size: NSSize) -> NSRect {
+    let yOffset = screen.visibleFrame.height * 0.3
+    let x = screen.visibleFrame.midX - size.width / 2
+    let y = screen.visibleFrame.midY - size.height + yOffset
+    return NSRect(x: floor(x), y: floor(y), width: size.width, height: size.height)
+  }
 }
