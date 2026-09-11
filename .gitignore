@@ -1,62 +1,9 @@
-# OSX
-#
+# macOS
 .DS_Store
 
-# Xcode
-#
-build/
-*.pbxuser
-!default.pbxuser
-*.mode1v3
-!default.mode1v3
-*.mode2v3
-!default.mode2v3
-*.perspectivev3
-!default.perspectivev3
-xcuserdata
-*.xccheckout
-*.moved-aside
-DerivedData
-*.hmap
-*.ipa
-*.xcuserstate
-ios/.xcode.env.local
-macos/.xcode.env.local
+# SwiftPM
+.build/
+.swiftpm/
 
-# Windows
-msbuild.binlog
-
-# Android/IntelliJ
-#
-build/
-.idea
-.gradle
-local.properties
-*.iml
-
-.cxx/
-*.keystore
-!debug.keystore
-
-# node.js
-#
-node_modules/
-npm-debug.log
-yarn-error.log
-
-# Bundle artifact
-*.jsbundle
-
-# CocoaPods
-/ios/Pods/
-env.json
-
-# Built binaries
-**/Radix.app
-**/Radix-debug.app
-
-vendor
-
-# Temporary files created by Metro to check the health of the file watcher
-.metro-health-check*
-
+# Bundled app output (make bundle)
+dist/

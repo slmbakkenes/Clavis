@@ -1,20 +1,21 @@
 #!/bin/bash
-# Bumps the patch version in package.json and syncs it into Info.plist.
-# Commits/tags are intentionally left to you.
+# Bumps the patch version and the build number in Resources/Info.plist.
+# Commits and tags are left to you.
 
-set -e
+set -euo pipefail
 
-PROJECT_DIR="macos/sol-macOS"
-INFOPLIST_DIR="${PROJECT_DIR}/Info.plist"
+cd "$(dirname "$0")/.."
 
-npm --no-git-tag-version version patch
+PLIST="Resources/Info.plist"
 
-PACKAGE_VERSION=$(node -p "require('./package.json').version")
+VERSION=$(/usr/libexec/PlistBuddy -c "Print CFBundleShortVersionString" "$PLIST")
+BUILD=$(/usr/libexec/PlistBuddy -c "Print CFBundleVersion" "$PLIST")
 
-BUILD_NUMBER=$(/usr/libexec/PlistBuddy -c "Print CFBundleVersion" "${INFOPLIST_DIR}")
-BUILD_NUMBER=$((BUILD_NUMBER + 1))
+IFS=. read -r MAJOR MINOR PATCH <<<"$VERSION"
+NEXT_VERSION="${MAJOR}.${MINOR}.$((PATCH + 1))"
+NEXT_BUILD=$((BUILD + 1))
 
-/usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString ${PACKAGE_VERSION}" "${INFOPLIST_DIR}"
-/usr/libexec/PlistBuddy -c "Set :CFBundleVersion ${BUILD_NUMBER}" "${INFOPLIST_DIR}"
+/usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString ${NEXT_VERSION}" "$PLIST"
+/usr/libexec/PlistBuddy -c "Set :CFBundleVersion ${NEXT_BUILD}" "$PLIST"
 
-echo "Bumped to ${PACKAGE_VERSION} (build ${BUILD_NUMBER}). Review with 'git diff', then commit when ready."
+echo "Bumped to ${NEXT_VERSION} (build ${NEXT_BUILD}). Review with 'git diff', then commit when ready."
