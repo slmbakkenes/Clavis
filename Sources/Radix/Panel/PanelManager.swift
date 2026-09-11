@@ -32,6 +32,10 @@ final class PanelManager {
   func setRootView(_ view: RootView) {
     hostingView?.removeFromSuperview()
     let hosting = NSHostingView(rootView: view)
+    // The panel is a titled window with its title bar hidden. macOS still
+    // reserves that strip, and SwiftUI would push all content below it,
+    // shifting the search field down and clipping the bar.
+    hosting.safeAreaRegions = []
     hosting.autoresizingMask = [.width, .height]
     hosting.frame = NSRect(origin: .zero, size: panel.contentView!.bounds.size)
     panel.contentView!.addSubview(hosting)
