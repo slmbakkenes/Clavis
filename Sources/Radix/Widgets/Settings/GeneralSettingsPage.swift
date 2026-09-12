@@ -51,6 +51,7 @@ struct GeneralSettingsPage: View {
           HStack(spacing: 8) {
             Text(folder)
               .font(.system(size: 12))
+              .foregroundStyle(Theme.text)
               .lineLimit(1)
               .truncationMode(.middle)
               .frame(maxWidth: .infinity, alignment: .leading)
@@ -58,7 +59,7 @@ struct GeneralSettingsPage: View {
               model.removeSearchFolder(folder)
             } label: {
               Image(systemName: "minus.circle.fill")
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Theme.textMuted)
             }
             .buttonStyle(.plain)
             .focusable(false)
@@ -119,7 +120,7 @@ struct GeneralSettingsPage: View {
     VStack(alignment: .trailing, spacing: 4) {
       HStack(spacing: 6) {
         Circle()
-          .fill(SearchEngine.isValidCustomURL(model.config.customSearchUrl) ? Color.green : Color.red)
+          .fill(SearchEngine.isValidCustomURL(model.config.customSearchUrl) ? Theme.success : Theme.danger)
           .frame(width: 8, height: 8)
         TextField("https://google.com/search?q=%s", text: model.configBinding(\.customSearchUrl))
           .textFieldStyle(.roundedBorder)

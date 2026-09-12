@@ -16,6 +16,11 @@ struct RootView: View {
           )
         }
       }
+      // Native controls (Toggle, Picker, prominent buttons) fill with the
+      // environment tint, which is the user's macOS accent unless set. One
+      // modifier here retints all of them; views that need a different tint,
+      // such as a text caret, override it locally.
+      .tint(Theme.accent)
   }
 
   @ViewBuilder

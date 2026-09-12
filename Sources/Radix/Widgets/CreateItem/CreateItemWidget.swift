@@ -49,7 +49,7 @@ struct CreateItemWidget: View {
       Button(action: close) {
         Image(systemName: "chevron.left")
           .font(.system(size: 14, weight: .semibold))
-          .foregroundStyle(.secondary)
+          .foregroundStyle(Theme.textMuted)
       }
       .buttonStyle(.plain)
       .focusable(false)
@@ -73,12 +73,16 @@ struct CreateItemWidget: View {
       row("Name") {
         TextField("My Quick Link", text: $name)
           .textFieldStyle(.roundedBorder)
+          .foregroundStyle(Theme.text)
+          .tint(Theme.fg1)
           .focused($focusedField, equals: .name)
           .onSubmit(commit)
       }
       row("Link") {
         TextField("https://google.com", text: $link)
           .textFieldStyle(.roundedBorder)
+          .foregroundStyle(Theme.text)
+          .tint(Theme.fg1)
           .focused($focusedField, equals: .link)
           .onSubmit(commit)
       }
@@ -86,7 +90,7 @@ struct CreateItemWidget: View {
         row("") {
           Text(error)
             .font(.caption)
-            .foregroundStyle(.red)
+            .foregroundStyle(Theme.danger)
           Spacer()
         }
       }
@@ -104,11 +108,11 @@ struct CreateItemWidget: View {
             color = hex
           } label: {
             Circle()
-              .fill(HexColor(hex).map(Color.init) ?? .gray)
+              .fill(HexColor(hex).map(Color.init) ?? Theme.textMuted)
               .frame(width: 16, height: 16)
               .padding(8)
               .background(
-                hex == color ? Color(nsColor: .quaternaryLabelColor) : .clear,
+                hex == color ? Theme.selection : .clear,
                 in: RoundedRectangle(cornerRadius: 6))
           }
           .buttonStyle(.plain)
@@ -125,10 +129,10 @@ struct CreateItemWidget: View {
             } label: {
               Image(systemName: candidate)
                 .font(.system(size: 16))
-                .foregroundStyle(HexColor(color).map(Color.init) ?? .primary)
+                .foregroundStyle(HexColor(color).map(Color.init) ?? Theme.text)
                 .frame(width: 32, height: 32)
                 .background(
-                  candidate == symbol ? Color(nsColor: .quaternaryLabelColor) : .clear,
+                  candidate == symbol ? Theme.selection : .clear,
                   in: RoundedRectangle(cornerRadius: 6))
             }
             .buttonStyle(.plain)
@@ -147,14 +151,17 @@ struct CreateItemWidget: View {
       Spacer()
       Button(isEditing ? "Update" : "Create", action: commit)
         .buttonStyle(.borderedProminent)
+        // .borderedProminent fills with the system accent, which is whatever
+        // colour the user's macOS settings pick. Pin it to the theme.
+        .tint(Theme.accent)
         .focusable(false)
     }
     .padding(.horizontal, 12)
     .padding(.vertical, 8)
-    .background(Color(nsColor: .quaternaryLabelColor).opacity(0.25))
+    .background(Theme.elevated.opacity(0.6))
     .overlay(alignment: .top) {
       Rectangle()
-        .fill(Color(nsColor: .separatorColor))
+        .fill(Theme.separator)
         .frame(height: 1)
     }
   }
@@ -163,6 +170,7 @@ struct CreateItemWidget: View {
     HStack(spacing: 8) {
       Text(label)
         .font(.system(size: 13, weight: .bold))
+        .foregroundStyle(Theme.text)
         .frame(width: Self.labelWidth, alignment: .trailing)
       content()
     }
@@ -171,10 +179,10 @@ struct CreateItemWidget: View {
   private func iconTile(_ name: String, size: CGFloat) -> some View {
     Image(systemName: name)
       .font(.system(size: size * 0.55, weight: .semibold))
-      .foregroundStyle(HexColor(color).map(Color.init) ?? .primary)
+      .foregroundStyle(HexColor(color).map(Color.init) ?? Theme.text)
       .frame(width: size, height: size)
-      .background(Color(nsColor: .textBackgroundColor), in: RoundedRectangle(cornerRadius: 5))
-      .overlay(RoundedRectangle(cornerRadius: 5).stroke(Color(nsColor: .separatorColor)))
+      .background(Theme.elevated, in: RoundedRectangle(cornerRadius: 5))
+      .overlay(RoundedRectangle(cornerRadius: 5).stroke(Theme.separator))
   }
 
   // MARK: Actions

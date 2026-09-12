@@ -9,6 +9,8 @@ struct ScratchpadWidget: View {
   var body: some View {
     TextEditor(text: Binding(get: { model.state.note }, set: { model.setNote($0) }))
       .font(.system(size: 14))
+      .foregroundStyle(Theme.text)
+      .tint(Theme.fg1)
       .scrollContentBackground(.hidden)
       .background(.clear)
       .focusEffectDisabled()
@@ -18,7 +20,7 @@ struct ScratchpadWidget: View {
         if model.state.note.isEmpty {
           Text("Write something...")
             .font(.system(size: 14))
-            .foregroundStyle(.tertiary)
+            .foregroundStyle(Theme.textSubtle)
             // TextEditor insets its text by about 5 pt horizontally.
             .padding(.horizontal, 21)
             .padding(.top, 16)

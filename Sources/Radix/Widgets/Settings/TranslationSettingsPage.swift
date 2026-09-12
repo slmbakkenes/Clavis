@@ -28,7 +28,7 @@ struct TranslationSettingsPage: View {
         SettingsRow(title: "Third language") {
           Picker("Third language", selection: model.configBinding(\.thirdTranslationLanguage)) {
             Text("None").tag(String?.none)
-            Divider()
+            Divider().overlay(Theme.separator)
             ForEach(languages, id: \.code) { language in
               Text(language.name).tag(String?.some(language.code))
             }

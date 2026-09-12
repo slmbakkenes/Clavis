@@ -8,10 +8,10 @@ enum CustomIcons {
   static let fallbackSymbol = "star.fill"
   static let defaultSymbol = "apple.logo"
 
-  /// `USER_COLOR_PALETTE` from the old create-item widget.
+  /// Swatches offered when creating a custom item, in gruvbox.
   static let colorPalette = [
-    "#bec2c8", "#e2e2e2", "#5e6ad2", "#26b5ce", "#0f7488", "#4cb782", "#0f783c",
-    "#f2c94c", "#5a450d", "#f2994a", "#db6e1f", "#f7c8c1", "#eb5757", "#c52828",
+    "#ebdbb2", "#83a598", "#8ec07c", "#b8bb26", "#fabd2f", "#fb4934", "#d3869b",
+    "#458588", "#689d6a", "#98971a", "#d79921", "#cc241d", "#b16286", "#928374",
   ]
 
   /// Symbols offered in the picker, in display order.

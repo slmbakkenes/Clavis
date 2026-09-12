@@ -42,16 +42,17 @@ struct SearchFooter: View {
         gap
         Text("Select")
           .font(.system(size: 11, weight: .semibold))
+          .foregroundStyle(Theme.text)
           .padding(.trailing, 4)
         KeyCap(symbol: "⏎", primary: true)
       }
     }
     .padding(.horizontal, 16)
     .padding(.vertical, 8)
-    .background(Color(nsColor: .quaternaryLabelColor).opacity(0.15))
+    .background(Theme.elevated.opacity(0.6))
     .overlay(alignment: .top) {
       Rectangle()
-        .fill(Color(nsColor: .separatorColor))
+        .fill(Theme.separator)
         .frame(height: 1)
     }
   }
@@ -63,7 +64,7 @@ struct SearchFooter: View {
   private func hint(_ text: String, emphasised: Bool = false) -> some View {
     Text(text)
       .font(.system(size: 11, weight: emphasised ? .semibold : .regular))
-      .foregroundStyle(.secondary)
+      .foregroundStyle(Theme.textMuted)
       .padding(.trailing, 4)
   }
 }

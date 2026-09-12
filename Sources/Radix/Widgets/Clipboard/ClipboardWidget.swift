@@ -48,7 +48,7 @@ struct ClipboardWidget: View {
       } label: {
         Image(systemName: "chevron.left")
           .font(.system(size: 14, weight: .semibold))
-          .foregroundStyle(.secondary)
+          .foregroundStyle(Theme.textMuted)
       }
       .buttonStyle(.plain)
       .focusable(false)
@@ -56,6 +56,8 @@ struct ClipboardWidget: View {
       TextField("Search Pasteboard...", text: $model.query)
         .textFieldStyle(.plain)
         .font(.system(size: 18))
+        .foregroundStyle(Theme.text)
+        .tint(Theme.fg1)
         .focused($searchFocused)
     }
     .padding(.horizontal, 20)
@@ -66,7 +68,7 @@ struct ClipboardWidget: View {
   private func list(_ items: [PasteItem]) -> some View {
     if items.isEmpty {
       Text("[ ]")
-        .foregroundStyle(.secondary)
+        .foregroundStyle(Theme.textMuted)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     } else {
       ScrollViewReader { proxy in
@@ -102,11 +104,11 @@ struct ClipboardWidget: View {
       Text(item.text.prefix(300).trimmingCharacters(in: .whitespacesAndNewlines))
         .font(.system(size: 11))
         .lineLimit(1)
-        .foregroundStyle(isSelected ? Color.white : Color.primary)
+        .foregroundStyle(isSelected ? Theme.textOnSelection : Theme.text)
         .frame(maxWidth: .infinity, alignment: .leading)
     }
     .padding(8)
-    .background(isSelected ? Color.accentColor : Color.clear, in: RoundedRectangle(cornerRadius: 4))
+    .background(isSelected ? Theme.selection : Color.clear, in: RoundedRectangle(cornerRadius: 4))
     .opacity(isSelected ? 1 : 0.8)
     .contentShape(Rectangle())
   }
@@ -124,7 +126,7 @@ struct ClipboardWidget: View {
         .interpolation(.high)
     } else {
       Image(systemName: "doc.on.clipboard")
-        .foregroundStyle(.secondary)
+        .foregroundStyle(Theme.textMuted)
     }
   }
 
@@ -149,7 +151,7 @@ struct ClipboardWidget: View {
           .frame(maxWidth: .infinity, alignment: .topLeading)
           .padding(12)
       }
-      .background(Color(nsColor: .textBackgroundColor).opacity(0.6), in: RoundedRectangle(cornerRadius: 8))
+      .background(Theme.elevated.opacity(0.6), in: RoundedRectangle(cornerRadius: 8))
     } else {
       Color.clear
     }
@@ -193,21 +195,22 @@ struct ClipboardWidget: View {
       Spacer()
       Text("Delete Item")
         .font(.system(size: 11))
-        .foregroundStyle(.secondary)
+        .foregroundStyle(Theme.textMuted)
         .padding(.trailing, 4)
       KeyCap(symbol: "⇧")
       KeyCap(symbol: "⌫")
       Spacer().frame(width: 16)
       Text("Paste")
         .font(.system(size: 11))
+        .foregroundStyle(Theme.textMuted)
         .padding(.trailing, 4)
       KeyCap(symbol: "⏎", primary: true)
     }
     .padding(.horizontal, 16)
     .padding(.vertical, 8)
-    .background(Color(nsColor: .underPageBackgroundColor).opacity(0.4))
+    .background(Theme.bg0Hard.opacity(0.4))
     .overlay(alignment: .top) {
-      Divider()
+      Divider().overlay(Theme.separator)
     }
   }
 }

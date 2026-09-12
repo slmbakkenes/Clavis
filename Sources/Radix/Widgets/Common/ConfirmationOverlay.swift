@@ -9,7 +9,7 @@ struct ConfirmationOverlay: View {
 
   var body: some View {
     ZStack {
-      Color.black.opacity(0.5)
+      Theme.scrim
         .contentShape(Rectangle())
         .onTapGesture(perform: onCancel)
 
@@ -22,10 +22,10 @@ struct ConfirmationOverlay: View {
 
         Button(action: onProceed) {
           Text("Proceed")
-            .foregroundStyle(.white)
+            .foregroundStyle(Theme.background)
             .frame(maxWidth: .infinity)
             .padding(8)
-            .background(Color.accentColor, in: Capsule())
+            .background(Theme.accent, in: Capsule())
             .contentShape(Capsule())
         }
         .buttonStyle(.plain)
@@ -35,17 +35,18 @@ struct ConfirmationOverlay: View {
           Text("Cancel")
             .frame(maxWidth: .infinity)
             .padding(8)
-            .background(Color(nsColor: .quaternaryLabelColor), in: Capsule())
+            .background(Theme.elevated, in: Capsule())
             .contentShape(Capsule())
         }
         .buttonStyle(.plain)
         .focusable(false)
       }
+      .foregroundStyle(Theme.text)
       .padding(24)
       .frame(width: 280)
-      .background(Color(nsColor: .windowBackgroundColor), in: RoundedRectangle(cornerRadius: 12))
+      .background(Theme.elevated, in: RoundedRectangle(cornerRadius: 12))
       .overlay(
-        RoundedRectangle(cornerRadius: 12).stroke(Color(nsColor: .separatorColor), lineWidth: 1)
+        RoundedRectangle(cornerRadius: 12).stroke(Theme.separator, lineWidth: 1)
       )
     }
   }

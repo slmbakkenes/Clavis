@@ -32,6 +32,10 @@ struct SearchWidget: View {
     TextField("Search your mac...", text: $model.query)
       .textFieldStyle(.plain)
       .font(.system(size: 18))
+      .foregroundStyle(Theme.text)
+      // Ghostty draws its cursor in the foreground colour; the caret here
+      // matches so both blink the same shade.
+      .tint(Theme.fg1)
       .focused($searchFocused)
       .padding(.horizontal, 20)
       .frame(height: AppModel.compactHeight)
@@ -47,7 +51,7 @@ struct SearchWidget: View {
     if model.searchRows.isEmpty {
       Text("[ ]")
         .font(.system(size: 48, weight: .thin))
-        .foregroundStyle(.tertiary)
+        .foregroundStyle(Theme.textSubtle)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     } else {
       ScrollViewReader { proxy in

@@ -14,7 +14,7 @@ struct SearchRowView: View {
         .overlay(alignment: .bottom) {
           if item.isRunning {
             Circle()
-              .fill(isSelected ? Color.white : Color.secondary)
+              .fill(isSelected ? Theme.textOnSelection : Theme.textMuted)
               .frame(width: 3, height: 3)
               .offset(y: 5)
           }
@@ -22,7 +22,7 @@ struct SearchRowView: View {
 
       Text(item.name)
         .lineLimit(1)
-        .foregroundStyle(isSelected ? Color.white : Color.primary)
+        .foregroundStyle(isSelected ? Theme.textOnSelection : Theme.text)
         .padding(.leading, 12)
         .frame(maxWidth: 576, alignment: .leading)
 
@@ -32,7 +32,7 @@ struct SearchRowView: View {
     }
     .padding(.horizontal, 12)
     .frame(height: 48)
-    .background(isSelected ? Color.accentColor : Color.clear, in: RoundedRectangle(cornerRadius: 12))
+    .background(isSelected ? Theme.selection : Color.clear, in: RoundedRectangle(cornerRadius: 12))
     .contentShape(RoundedRectangle(cornerRadius: 12))
   }
 
@@ -57,7 +57,7 @@ struct SearchRowView: View {
       if let shortcut, !shortcut.isEmpty {
         HStack(spacing: 4) {
           ForEach(Array(ShortcutFormat.symbols(shortcut).enumerated()), id: \.offset) { _, symbol in
-            KeyCap(symbol: symbol, onAccent: isSelected)
+            KeyCap(symbol: symbol, onSelection: isSelected)
           }
         }
       }
@@ -65,7 +65,7 @@ struct SearchRowView: View {
       if item.kind == .bookmark, let folder = item.subtitle, !folder.isEmpty {
         Text(folder.count > 16 ? "\(folder.prefix(16))..." : folder)
           .font(.system(size: 13))
-          .foregroundStyle(isSelected ? Color.white : Color.primary)
+          .foregroundStyle(isSelected ? Theme.textOnSelection : Theme.text)
           .lineLimit(1)
       }
     }
@@ -74,7 +74,7 @@ struct SearchRowView: View {
   private func detail(_ text: String) -> some View {
     Text(text)
       .font(.system(size: 11))
-      .foregroundStyle(isSelected ? Color.white : Color.secondary)
+      .foregroundStyle(isSelected ? Theme.textOnSelection : Theme.textMuted)
       .lineLimit(1)
   }
 }

@@ -28,7 +28,7 @@ struct TranslationWidget: View {
       } label: {
         Image(systemName: "chevron.left")
           .font(.system(size: 14, weight: .semibold))
-          .foregroundStyle(.secondary)
+          .foregroundStyle(Theme.textMuted)
       }
       .buttonStyle(.plain)
       .focusable(false)
@@ -36,6 +36,8 @@ struct TranslationWidget: View {
       TextField("Translate...", text: $model.query)
         .textFieldStyle(.plain)
         .font(.system(size: 18))
+        .foregroundStyle(Theme.text)
+        .tint(Theme.fg1)
         .focused($fieldFocused)
     }
     .padding(.horizontal, 20)
@@ -48,7 +50,7 @@ struct TranslationWidget: View {
     case .idle, .loading:
       Text("Translating...")
         .font(.system(size: 12))
-        .foregroundStyle(.secondary)
+        .foregroundStyle(Theme.textMuted)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     case .loaded(let rows):
       VStack(spacing: 0) {
@@ -67,23 +69,23 @@ struct TranslationWidget: View {
         case .success(let text):
           Text(text)
             .font(.system(size: 14, design: .monospaced))
-            .foregroundStyle(isSelected ? Color.white : Color.primary)
+            .foregroundStyle(isSelected ? Theme.textOnSelection : Theme.text)
             .textSelection(.enabled)
         case .failure(let error):
           Text(verbatim: String(describing: error))
             .font(.system(size: 12))
-            .foregroundStyle(isSelected ? Color.white.opacity(0.8) : Color.secondary)
+            .foregroundStyle(isSelected ? Theme.textOnSelection.opacity(0.8) : Theme.textMuted)
         }
       }
       .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
 
       Text(row.language)
         .font(.system(size: 12))
-        .foregroundStyle(isSelected ? Color.white : Color.primary)
+        .foregroundStyle(isSelected ? Theme.textOnSelection : Theme.text)
         .opacity(0.5)
     }
     .padding(12)
-    .background(isSelected ? Color.accentColor : Color.clear, in: RoundedRectangle(cornerRadius: 8))
+    .background(isSelected ? Theme.selection : Color.clear, in: RoundedRectangle(cornerRadius: 8))
     .padding(4)
   }
 }

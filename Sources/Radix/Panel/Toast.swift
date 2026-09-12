@@ -1,4 +1,5 @@
 import AppKit
+import SwiftUI
 
 /// Non-activating panel that hosts a `ToastView` or `ShellOutputView`.
 @MainActor
@@ -40,16 +41,16 @@ enum ToastVariant: String, Sendable {
 
   var gradientColors: [NSColor] {
     switch self {
-    case .success: return [NSColor.green.withAlphaComponent(0.2), .clear]
-    case .error: return [NSColor.red.withAlphaComponent(0.2), .clear]
+    case .success: return [NSColor(Theme.success).withAlphaComponent(0.2), .clear]
+    case .error: return [NSColor(Theme.danger).withAlphaComponent(0.2), .clear]
     case .none: return [.clear, .clear]
     }
   }
 
   var dotColor: NSColor {
     switch self {
-    case .success: return .green
-    case .error: return .red
+    case .success: return NSColor(Theme.success)
+    case .error: return NSColor(Theme.danger)
     case .none: return .clear
     }
   }
@@ -108,6 +109,7 @@ final class ToastView: NSView {
     }
 
     textLabel = NSTextField(labelWithString: text)
+    textLabel.textColor = NSColor(Theme.text)
     textLabel.alignment = .center
     textLabel.lineBreakMode = .byWordWrapping
     textLabel.isEditable = false

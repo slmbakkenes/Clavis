@@ -9,13 +9,14 @@ struct ShortcutRecorderOverlay: View {
 
   var body: some View {
     ZStack {
-      Color.black.opacity(0.6)
+      Theme.scrim
         .contentShape(Rectangle())
         .onTapGesture(perform: onCancel)
 
       VStack(spacing: 10) {
         Text(title)
           .font(.system(size: 13, weight: .bold))
+          .foregroundStyle(Theme.text)
 
         keys
           .frame(minHeight: 24)
@@ -23,16 +24,16 @@ struct ShortcutRecorderOverlay: View {
         if let error = recording.error {
           Text(error)
             .font(.system(size: 11))
-            .foregroundStyle(.red)
+            .foregroundStyle(Theme.danger)
         }
 
         Text("Esc to cancel")
           .font(.system(size: 10))
-          .foregroundStyle(.secondary)
+          .foregroundStyle(Theme.textMuted)
       }
       .padding(18)
       .frame(width: 320)
-      .background(Color(nsColor: .windowBackgroundColor), in: RoundedRectangle(cornerRadius: 10))
+      .background(Theme.elevated, in: RoundedRectangle(cornerRadius: 10))
       .shadow(color: .black.opacity(0.15), radius: 4, y: 2)
     }
   }
@@ -49,7 +50,7 @@ struct ShortcutRecorderOverlay: View {
     if recording.keys.isEmpty {
       Text("waiting...")
         .font(.system(size: 13, weight: .medium, design: .monospaced))
-        .foregroundStyle(.secondary)
+        .foregroundStyle(Theme.textMuted)
     } else {
       HStack(spacing: 4) {
         ForEach(Array(ShortcutFormat.symbols(recording.keys.joined(separator: "+")).enumerated()), id: \.offset) {

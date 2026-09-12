@@ -12,10 +12,10 @@ struct TemporaryResultView: View {
       .padding(.vertical, 24)
       .frame(maxWidth: .infinity, alignment: .leading)
       .background(
-        isSelected ? Color.accentColor : Color.clear,
+        isSelected ? Theme.selection : Color.clear,
         in: RoundedRectangle(cornerRadius: 8)
       )
-      .foregroundStyle(isSelected ? Color.white : Color.primary)
+      .foregroundStyle(isSelected ? Theme.textOnSelection : Theme.text)
   }
 
   @ViewBuilder
@@ -30,7 +30,7 @@ struct TemporaryResultView: View {
         Spacer()
         if let secondary, !secondary.isEmpty {
           Text(secondary)
-            .foregroundStyle(isSelected ? Color.white.opacity(0.85) : Color.secondary)
+            .foregroundStyle(secondaryStyle)
             .lineLimit(1)
         }
       }
@@ -53,7 +53,7 @@ struct TemporaryResultView: View {
   }
 
   private var secondaryStyle: Color {
-    isSelected ? Color.white.opacity(0.85) : Color.secondary
+    isSelected ? Theme.textOnSelection.opacity(0.85) : Theme.textMuted
   }
 
   private func column(_ labeled: TemporaryResult.Labeled, alignment: HorizontalAlignment) -> some View {

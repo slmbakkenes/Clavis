@@ -4,21 +4,28 @@ import SwiftUI
 struct KeyCap: View {
   let symbol: String
   var primary = false
-  /// Rows draw caps on the accent background, where the neutral fill would vanish.
-  var onAccent = false
+  /// Rows draw caps on the selection fill, where the neutral fill would vanish.
+  var onSelection = false
 
   var body: some View {
     Text(symbol)
       .font(.system(size: 11))
-      .foregroundStyle(primary || onAccent ? Color.white : Color.primary)
+      .foregroundStyle(foreground)
       .frame(minWidth: 20, minHeight: 20)
       .padding(.horizontal, symbol.count > 1 ? 4 : 0)
       .background(fill, in: RoundedRectangle(cornerRadius: 4))
   }
 
   private var fill: Color {
-    if primary { return .accentColor }
-    if onAccent { return Color.white.opacity(0.2) }
-    return Color(nsColor: .quaternaryLabelColor).opacity(0.6)
+    if primary { return Theme.accent }
+    if onSelection { return Theme.fg1.opacity(0.15) }
+    return Theme.elevated
+  }
+
+  /// The primary cap is a filled accent chip, so its glyph has to invert.
+  private var foreground: Color {
+    if primary { return Theme.background }
+    if onSelection { return Theme.textOnSelection }
+    return Theme.text
   }
 }

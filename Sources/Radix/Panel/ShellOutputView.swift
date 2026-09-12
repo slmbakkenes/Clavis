@@ -1,4 +1,5 @@
 import AppKit
+import SwiftUI
 
 /// Transparent view on top of the output that swallows clicks, so a click on
 /// the toast can be routed to a handler without the text view eating it.
@@ -41,7 +42,7 @@ final class ShellOutputView: NSView {
     textView.isEditable = false
     textView.isSelectable = false
     textView.drawsBackground = false
-    textView.textColor = .labelColor
+    textView.textColor = NSColor(Theme.text)
     textView.font = .monospacedSystemFont(ofSize: 11, weight: .regular)
     textView.isVerticallyResizable = true
     textView.isHorizontallyResizable = false
@@ -71,15 +72,15 @@ final class ShellOutputView: NSView {
 
   func setSuccessStyle() {
     gradientLayer?.colors = [
-      NSColor.systemGreen.withAlphaComponent(0.15).cgColor,
-      NSColor.systemGreen.withAlphaComponent(0.02).cgColor,
+      NSColor(Theme.success).withAlphaComponent(0.15).cgColor,
+      NSColor(Theme.success).withAlphaComponent(0.02).cgColor,
     ]
   }
 
   func setFailedStyle() {
     gradientLayer?.colors = [
-      NSColor.systemRed.withAlphaComponent(0.15).cgColor,
-      NSColor.systemRed.withAlphaComponent(0.02).cgColor,
+      NSColor(Theme.danger).withAlphaComponent(0.15).cgColor,
+      NSColor(Theme.danger).withAlphaComponent(0.02).cgColor,
     ]
   }
 

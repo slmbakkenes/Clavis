@@ -46,7 +46,7 @@ struct FileSearchWidget: View {
       } label: {
         Image(systemName: "chevron.left")
           .font(.system(size: 14, weight: .semibold))
-          .foregroundStyle(.secondary)
+          .foregroundStyle(Theme.textMuted)
       }
       .buttonStyle(.plain)
       .focusable(false)
@@ -54,6 +54,8 @@ struct FileSearchWidget: View {
       TextField("Search for files...", text: $model.query)
         .textFieldStyle(.plain)
         .font(.system(size: 18))
+        .foregroundStyle(Theme.text)
+        .tint(Theme.fg1)
         .focused($searchFocused)
     }
     .padding(.horizontal, 20)
@@ -82,7 +84,7 @@ struct FileSearchWidget: View {
     if rows.isEmpty {
       Text("No items")
         .font(.system(size: 13))
-        .foregroundStyle(.secondary)
+        .foregroundStyle(Theme.textMuted)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     } else {
       ScrollViewReader { proxy in
@@ -115,19 +117,19 @@ struct FileSearchWidget: View {
 
       Text(result.name)
         .lineLimit(1)
-        .foregroundStyle(isSelected ? Color.white : Color.primary)
+        .foregroundStyle(isSelected ? Theme.textOnSelection : Theme.text)
         .padding(.leading, 12)
         .frame(maxWidth: .infinity, alignment: .leading)
 
       Text(String(result.path.prefix(Self.pathPreviewLength)))
         .font(.system(size: 11))
         .lineLimit(1)
-        .foregroundStyle(isSelected ? Color.white : Color.secondary)
+        .foregroundStyle(isSelected ? Theme.textOnSelection : Theme.textMuted)
         .padding(.leading, 8)
     }
     .padding(.horizontal, 24)
     .frame(height: 48)
-    .background(isSelected ? Color.accentColor : Color.clear, in: RoundedRectangle(cornerRadius: 12))
+    .background(isSelected ? Theme.selection : Color.clear, in: RoundedRectangle(cornerRadius: 12))
     .contentShape(RoundedRectangle(cornerRadius: 12))
   }
 
@@ -143,10 +145,10 @@ struct FileSearchWidget: View {
     }
     .padding(.horizontal, 16)
     .padding(.vertical, 8)
-    .background(Color(nsColor: .quaternaryLabelColor).opacity(0.15))
+    .background(Theme.elevated.opacity(0.6))
     .overlay(alignment: .top) {
       Rectangle()
-        .fill(Color(nsColor: .separatorColor))
+        .fill(Theme.separator)
         .frame(height: 1)
     }
   }
@@ -154,7 +156,7 @@ struct FileSearchWidget: View {
   private func hint(_ text: String) -> some View {
     Text(text)
       .font(.system(size: 11))
-      .foregroundStyle(.secondary)
+      .foregroundStyle(Theme.textMuted)
       .padding(.trailing, 4)
   }
 }

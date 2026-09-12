@@ -7,11 +7,11 @@ struct PermissionsBar: View {
       Spacer()
       Text("Window management needs Accessibility access — click to grant")
         .font(.system(size: 11))
-        .foregroundStyle(.secondary)
+        .foregroundStyle(Theme.textMuted)
     }
     .padding(.horizontal, 16)
     .frame(height: AppModel.permissionsBarHeight)
-    .background(Color(nsColor: .quaternaryLabelColor).opacity(0.15))
+    .background(Theme.elevated.opacity(0.6))
     .contentShape(Rectangle())
     .onTapGesture {
       Permissions.requestAccessibility()

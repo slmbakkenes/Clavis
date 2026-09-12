@@ -27,9 +27,9 @@ struct ItemIconView: View {
         // As the old custom items: a tinted glyph on a small plain tile.
         Image(systemName: name)
           .font(.system(size: 12, weight: .semibold))
-          .foregroundStyle(colorHex.flatMap(HexColor.init).map(Color.init) ?? Color.primary)
+          .foregroundStyle(colorHex.flatMap(HexColor.init).map(Color.init) ?? Theme.text)
           .frame(width: 24, height: 24)
-          .background(Color(nsColor: .textBackgroundColor), in: RoundedRectangle(cornerRadius: 5))
+          .background(Theme.elevated, in: RoundedRectangle(cornerRadius: 5))
       case .emoji(let emoji):
         Text(emoji)
           .font(.system(size: 16))
@@ -43,7 +43,7 @@ struct ItemIconView: View {
   private func symbol(_ name: String) -> some View {
     Image(systemName: name)
       .font(.system(size: 16))
-      .foregroundStyle(isSelected ? Color.white : Color.primary)
+      .foregroundStyle(isSelected ? Theme.textOnSelection : Theme.text)
   }
 }
 

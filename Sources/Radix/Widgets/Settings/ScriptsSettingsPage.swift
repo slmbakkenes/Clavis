@@ -12,12 +12,13 @@ struct ScriptsSettingsPage: View {
         HStack(alignment: .top, spacing: 12) {
           Image(systemName: "terminal")
             .font(.system(size: 24))
-            .foregroundStyle(.secondary)
+            .foregroundStyle(Theme.textMuted)
             .frame(width: 32)
           VStack(alignment: .leading, spacing: 6) {
             HStack(spacing: 8) {
               Text(Paths.scriptsDirectory.path)
                 .font(.system(size: 12, design: .monospaced))
+                .foregroundStyle(Theme.text)
                 .textSelection(.enabled)
                 .lineLimit(1)
                 .truncationMode(.middle)
@@ -32,7 +33,7 @@ struct ScriptsSettingsPage: View {
             SettingsCaption("Supported: .sh and .applescript. Each script can set its name and icon with two comments:")
             Text("# name: Script Name\n# icon: 💻")
               .font(.system(size: 11, design: .monospaced))
-              .foregroundStyle(.secondary)
+              .foregroundStyle(Theme.textMuted)
               .textSelection(.enabled)
           }
         }
@@ -42,6 +43,7 @@ struct ScriptsSettingsPage: View {
       SettingsSection {
         Text("Detected Scripts")
           .font(.system(size: 13, weight: .semibold))
+          .foregroundStyle(Theme.text)
           .padding(.horizontal, 12)
           .padding(.vertical, 8)
         if model.scripts.isEmpty {
@@ -49,7 +51,7 @@ struct ScriptsSettingsPage: View {
           Text("No scripts found.")
             .font(.system(size: 12))
             .italic()
-            .foregroundStyle(.secondary)
+            .foregroundStyle(Theme.textMuted)
             .padding(.horizontal, 12)
             .padding(.vertical, 8)
         } else {
@@ -60,11 +62,12 @@ struct ScriptsSettingsPage: View {
                 .frame(width: 20)
               Text(script.name)
                 .font(.system(size: 12))
+                .foregroundStyle(Theme.text)
                 .lineLimit(1)
               Spacer(minLength: 8)
               Text(fileName(of: script))
                 .font(.system(size: 11))
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Theme.textMuted)
                 .lineLimit(1)
             }
             .padding(.horizontal, 12)

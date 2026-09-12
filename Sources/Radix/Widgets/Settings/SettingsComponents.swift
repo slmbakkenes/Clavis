@@ -26,8 +26,8 @@ struct SettingsSection<Content: View>: View {
       content
     }
     .frame(maxWidth: .infinity, alignment: .leading)
-    .background(Color(nsColor: .controlBackgroundColor).opacity(0.6), in: RoundedRectangle(cornerRadius: 8))
-    .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color(nsColor: .separatorColor)))
+    .background(Theme.elevated.opacity(0.6), in: RoundedRectangle(cornerRadius: 8))
+    .overlay(RoundedRectangle(cornerRadius: 8).stroke(Theme.separator))
   }
 }
 
@@ -42,10 +42,11 @@ struct SettingsRow<Control: View>: View {
       VStack(alignment: .leading, spacing: 2) {
         Text(title)
           .font(.system(size: 13))
+          .foregroundStyle(Theme.text)
         if let caption {
           Text(caption)
             .font(.system(size: 11))
-            .foregroundStyle(.secondary)
+            .foregroundStyle(Theme.textMuted)
         }
       }
       Spacer(minLength: 8)
@@ -58,7 +59,7 @@ struct SettingsRow<Control: View>: View {
 
 struct SettingsDivider: View {
   var body: some View {
-    Divider().padding(.leading, 12)
+    Divider().overlay(Theme.separator).padding(.leading, 12)
   }
 }
 
@@ -73,7 +74,7 @@ struct SettingsCaption: View {
   var body: some View {
     Text(text)
       .font(.system(size: 11))
-      .foregroundStyle(.secondary)
+      .foregroundStyle(Theme.textMuted)
   }
 }
 

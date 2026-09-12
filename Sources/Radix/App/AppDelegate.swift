@@ -23,6 +23,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
   private var isLoadingBookmarks = false
 
   func applicationDidFinishLaunching(_ notification: Notification) {
+    // Radix is gruvbox dark whatever the system is set to (see `Theme`). This
+    // also settles the vibrancy material and every AppKit control that still
+    // resolves a semantic colour, including the alert below.
+    NSApp.appearance = NSAppearance(named: .darkAqua)
+
     let store = ConfigStore()
     let loaded: (config: Config, state: AppState)
     do {

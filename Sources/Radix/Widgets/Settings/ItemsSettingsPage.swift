@@ -10,9 +10,9 @@ struct ItemsSettingsPage: View {
   var body: some View {
     VStack(alignment: .leading, spacing: 0) {
       header
-      Divider()
+      Divider().overlay(Theme.separator)
       hyperKeyRow
-      Divider()
+      Divider().overlay(Theme.separator)
       filterBar
       if let filter = model.shortcutFilter {
         shortcutFilterStrip(filter)
@@ -30,12 +30,13 @@ struct ItemsSettingsPage: View {
     HStack {
       Text("Global Shortcuts")
         .font(.system(size: 13, weight: .semibold))
+        .foregroundStyle(Theme.text)
       Spacer()
       Button("Restore Defaults") {
         model.restoreDefaultShortcuts()
       }
       .buttonStyle(.plain)
-      .foregroundStyle(Color.accentColor)
+      .foregroundStyle(Theme.accent)
       .font(.system(size: 12))
       .focusable(false)
     }
@@ -46,6 +47,7 @@ struct ItemsSettingsPage: View {
     HStack {
       Text("Enable Hyper Key (Caps Lock into ⌘ + ⌥ + ⌃ + ⇧)")
         .font(.system(size: 12))
+        .foregroundStyle(Theme.text)
       Spacer()
       Toggle(
         "",
@@ -72,14 +74,15 @@ struct ItemsSettingsPage: View {
       } label: {
         Text("⌨")
           .font(.system(size: 14))
+          .foregroundStyle(Theme.text)
           .frame(width: 28, height: 22)
           .background(
-            model.shortcutFilter == nil ? Color.clear : Color.accentColor.opacity(0.15),
+            model.shortcutFilter == nil ? Color.clear : Theme.accent.opacity(0.15),
             in: RoundedRectangle(cornerRadius: 5)
           )
           .overlay(
             RoundedRectangle(cornerRadius: 5)
-              .stroke(model.shortcutFilter == nil ? Color(nsColor: .separatorColor) : Color.accentColor)
+              .stroke(model.shortcutFilter == nil ? Theme.separator : Theme.accent)
           )
       }
       .buttonStyle(.plain)
@@ -93,6 +96,7 @@ struct ItemsSettingsPage: View {
     HStack(spacing: 6) {
       Text("Filtering by shortcut:")
         .font(.system(size: 12))
+        .foregroundStyle(Theme.text)
       HStack(spacing: 3) {
         ForEach(Array(ShortcutFormat.symbols(filter).enumerated()), id: \.offset) { _, symbol in
           KeyCap(symbol: symbol)
@@ -104,13 +108,13 @@ struct ItemsSettingsPage: View {
       } label: {
         Image(systemName: "xmark")
           .font(.system(size: 10, weight: .bold))
-          .foregroundStyle(.red)
+          .foregroundStyle(Theme.danger)
       }
       .buttonStyle(.plain)
       .focusable(false)
     }
     .padding(8)
-    .background(Color.accentColor.opacity(0.1), in: RoundedRectangle(cornerRadius: 6))
+    .background(Theme.accent.opacity(0.1), in: RoundedRectangle(cornerRadius: 6))
     .padding(.bottom, 8)
   }
 
@@ -149,6 +153,7 @@ struct ItemsSettingsPage: View {
 
       Text(item.name)
         .font(.system(size: 12))
+        .foregroundStyle(Theme.text)
         .lineLimit(1)
         .frame(maxWidth: .infinity, alignment: .leading)
 
@@ -157,7 +162,7 @@ struct ItemsSettingsPage: View {
     .padding(.horizontal, 8)
     .padding(.vertical, 4)
     .background(
-      striped ? Color(nsColor: .quaternaryLabelColor).opacity(0.25) : Color.clear,
+      striped ? Theme.elevated.opacity(0.6) : Color.clear,
       in: RoundedRectangle(cornerRadius: 4)
     )
     .opacity(enabled ? 1 : 0.5)
@@ -175,7 +180,7 @@ struct ItemsSettingsPage: View {
         } label: {
           Image(systemName: "xmark")
             .font(.system(size: 9, weight: .bold))
-            .foregroundStyle(.red)
+            .foregroundStyle(Theme.danger)
             .padding(.leading, 6)
         }
         .buttonStyle(.plain)
@@ -186,13 +191,13 @@ struct ItemsSettingsPage: View {
     } else if enabled {
       Text("Click to set")
         .font(.system(size: 11))
-        .foregroundStyle(Color.accentColor)
+        .foregroundStyle(Theme.accent)
         .contentShape(Rectangle())
         .onTapGesture { model.startRecordingShortcut(for: item.id) }
     } else {
       Text("Disabled")
         .font(.system(size: 11))
-        .foregroundStyle(.secondary)
+        .foregroundStyle(Theme.textMuted)
     }
   }
 

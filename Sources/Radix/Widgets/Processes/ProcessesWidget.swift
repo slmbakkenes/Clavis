@@ -44,7 +44,7 @@ struct ProcessesWidget: View {
       } label: {
         Image(systemName: "chevron.left")
           .font(.system(size: 14, weight: .semibold))
-          .foregroundStyle(.secondary)
+          .foregroundStyle(Theme.textMuted)
       }
       .buttonStyle(.plain)
       .focusable(false)
@@ -52,6 +52,8 @@ struct ProcessesWidget: View {
       TextField("Search processes...", text: $model.query)
         .textFieldStyle(.plain)
         .font(.system(size: 18))
+        .foregroundStyle(Theme.text)
+        .tint(Theme.fg1)
         .focused($searchFocused)
     }
     .padding(.horizontal, 20)
@@ -65,11 +67,12 @@ struct ProcessesWidget: View {
       Text("CPU").frame(width: Self.columnWidth, alignment: .leading)
     }
     .font(.system(size: 13, weight: .semibold))
+    .foregroundStyle(Theme.textMuted)
     .padding(.horizontal, 28)
     .padding(.vertical, 8)
     .overlay(alignment: .bottom) {
       Rectangle()
-        .fill(Color(nsColor: .separatorColor))
+        .fill(Theme.separator)
         .frame(height: 1)
     }
   }
@@ -79,7 +82,7 @@ struct ProcessesWidget: View {
     if rows.isEmpty {
       Text("No items")
         .font(.system(size: 13))
-        .foregroundStyle(.secondary)
+        .foregroundStyle(Theme.textMuted)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     } else {
       ScrollViewReader { proxy in
@@ -113,10 +116,10 @@ struct ProcessesWidget: View {
         .frame(width: Self.columnWidth, alignment: .leading)
     }
     .font(.system(size: 13))
-    .foregroundStyle(isSelected ? Color.white : Color.primary)
+    .foregroundStyle(isSelected ? Theme.textOnSelection : Theme.text)
     .padding(.horizontal, 20)
     .frame(height: 36)
-    .background(isSelected ? Color.accentColor : Color.clear, in: RoundedRectangle(cornerRadius: 12))
+    .background(isSelected ? Theme.selection : Color.clear, in: RoundedRectangle(cornerRadius: 12))
     .contentShape(RoundedRectangle(cornerRadius: 12))
   }
 
@@ -125,16 +128,16 @@ struct ProcessesWidget: View {
       Spacer()
       Text("Kill process")
         .font(.system(size: 11))
-        .foregroundStyle(.secondary)
+        .foregroundStyle(Theme.textMuted)
         .padding(.trailing, 4)
       KeyCap(symbol: "⏎", primary: true)
     }
     .padding(.horizontal, 16)
     .padding(.vertical, 8)
-    .background(Color(nsColor: .quaternaryLabelColor).opacity(0.15))
+    .background(Theme.elevated.opacity(0.6))
     .overlay(alignment: .top) {
       Rectangle()
-        .fill(Color(nsColor: .separatorColor))
+        .fill(Theme.separator)
         .frame(height: 1)
     }
   }

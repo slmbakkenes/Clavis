@@ -34,7 +34,7 @@ struct SettingsWidget: View {
       }
       .frame(width: 180)
 
-      Divider()
+      Divider().overlay(Theme.separator)
 
       Group {
         switch page {
@@ -66,7 +66,7 @@ private struct SettingsSidebar: View {
       Button(action: onBack) {
         Label("Back", systemImage: "chevron.left")
           .font(.system(size: 13, weight: .medium))
-          .foregroundStyle(.secondary)
+          .foregroundStyle(Theme.textMuted)
       }
       .buttonStyle(.plain)
       .focusable(false)
@@ -81,9 +81,9 @@ private struct SettingsSidebar: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal, 10)
             .padding(.vertical, 6)
-            .foregroundStyle(page == candidate ? Color.white : Color.primary)
+            .foregroundStyle(page == candidate ? Theme.textOnSelection : Theme.text)
             .background(
-              page == candidate ? Color.accentColor : Color.clear, in: RoundedRectangle(cornerRadius: 6)
+              page == candidate ? Theme.selection : Color.clear, in: RoundedRectangle(cornerRadius: 6)
             )
             .contentShape(Rectangle())
         }
