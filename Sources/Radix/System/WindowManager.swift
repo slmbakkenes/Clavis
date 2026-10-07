@@ -191,7 +191,22 @@ final class WindowManager {
     target.window.setRectOf(CGRect(origin: origin, size: size))
   }
 
-  func fullscreen() throws {
+  /// Toggles native macOS full screen, giving the window its own Space.
+  /// Doesn't go through `target()`: a full-screen window's screen detection
+  /// isn't needed, and toggling must work on the way out too.
+  func toggleFullScreen() throws {
+    try requireAccessibility()
+    guard let window = AccessibilityElement.frontmostWindow() else {
+      NSSound.beep()
+      return
+    }
+    if !window.setFullScreen(!window.isFullScreen) {
+      throw UserFacingError("This window doesn't support full screen")
+    }
+  }
+
+  /// Resizes the window to fill the screen, leaving the menu bar and Dock.
+  func maximize() throws {
     guard let target = try target() else { return }
     lastActions[target.identifier] = .fullScreen
     target.window.setRectOf(target.screenFrame)

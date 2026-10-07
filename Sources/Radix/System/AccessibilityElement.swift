@@ -232,6 +232,30 @@ class AccessibilityElement {
     }
   }
 
+  /// Native macOS full screen (the window moves to its own Space), as
+  /// opposed to resizing the window to fill the screen.
+  var isFullScreen: Bool {
+    rawValue(for: NSAccessibility.Attribute(rawValue: "AXFullScreen")) as? Bool ?? false
+  }
+
+  /// Enters or leaves native full screen. Prefers the AXFullScreen attribute
+  /// and falls back to pressing the window's green full-screen button for
+  /// apps that don't expose it. Returns false when neither works.
+  @discardableResult
+  func setFullScreen(_ fullScreen: Bool) -> Bool {
+    let attribute = "AXFullScreen" as CFString
+    var settable: DarwinBoolean = false
+    if AXUIElementIsAttributeSettable(underlyingElement, attribute, &settable) == .success, settable.boolValue,
+      AXUIElementSetAttributeValue(underlyingElement, attribute, fullScreen as CFBoolean) == .success
+    {
+      return true
+    }
+    guard isFullScreen != fullScreen,
+      let button = withAttribute(kAXFullScreenButtonAttribute as CFString)
+    else { return false }
+    return AXUIElementPerformAction(button.underlyingElement, kAXPressAction as CFString) == .success
+  }
+
   func isEnhancedUserInterfaceEnabled() -> Bool? {
     var rawValue: AnyObject?
     let error = AXUIElementCopyAttributeValue(self.underlyingElement, kAXEnhancedUserInterface as CFString, &rawValue)

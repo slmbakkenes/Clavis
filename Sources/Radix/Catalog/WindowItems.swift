@@ -7,8 +7,11 @@ enum WindowItems {
   static func make() -> [Item] {
     let manager = WindowManager.shared
     return [
-      item("resize_fullscreen", "Resize window to full-screen", "arrow.up.left.and.arrow.down.right") {
-        try manager.fullscreen()
+      item("resize_fullscreen", "Toggle window full-screen", "arrow.up.left.and.arrow.down.right") {
+        try manager.toggleFullScreen()
+      },
+      item("resize_maximize", "Maximize window", "macwindow") {
+        try manager.maximize()
       },
       item("resize_right_half", "Resize window to right-half", "rectangle.righthalf.inset.filled") {
         try manager.moveHalf(.right)
