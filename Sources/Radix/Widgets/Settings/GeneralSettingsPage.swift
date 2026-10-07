@@ -16,6 +16,17 @@ struct GeneralSettingsPage: View {
       }
 
       SettingsSection {
+        SettingsRow(title: "Appearance", caption: "Gruvbox dark or light") {
+          Picker("Appearance", selection: model.configBinding(\.appearance)) {
+            Text("Dark").tag(Config.Appearance.dark)
+            Text("Light").tag(Config.Appearance.light)
+            Text("System").tag(Config.Appearance.system)
+          }
+          .settingsMenu()
+        }
+      }
+
+      SettingsSection {
         SettingsRow(title: "Global Shortcut") {
           Picker("Global Shortcut", selection: model.configBinding(\.globalShortcut)) {
             Text("⌘ + ␣").tag(Config.GlobalShortcut.command)

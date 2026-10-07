@@ -20,11 +20,17 @@ public struct Config: Codable, Equatable, Sendable {
     case orange = "ORANGE"
   }
 
+  /// Gruvbox dark or light, or whichever macOS is currently set to.
+  public enum Appearance: String, Codable, Sendable, CaseIterable {
+    case dark, light, system
+  }
+
   public var firstTranslationLanguage: String
   public var secondTranslationLanguage: String
   public var thirdTranslationLanguage: String?
   public var globalShortcut: GlobalShortcut
   public var showWindowOn: ShowWindowOn
+  public var appearance: Appearance
   public var launchAtLogin: Bool
   public var mediaKeyForwardingEnabled: Bool
   public var scratchPadColor: ScratchPadColor
@@ -49,7 +55,7 @@ public struct Config: Codable, Equatable, Sendable {
   /// only written when present so a hand-edited value is never deleted.
   static let ownedKeys: [String] = [
     "firstTranslationLanguage", "secondTranslationLanguage", "thirdTranslationLanguage",
-    "globalShortcut", "showWindowOn", "launchAtLogin", "mediaKeyForwardingEnabled",
+    "globalShortcut", "showWindowOn", "appearance", "launchAtLogin", "mediaKeyForwardingEnabled",
     "scratchPadColor", "searchFolders", "searchEngine", "customSearchUrl", "shortcuts",
     "showInAppBrowserBookMarks", "hyperKeyEnabled", "customItems", "disabledItemIds",
   ]
@@ -71,6 +77,7 @@ public struct Config: Codable, Equatable, Sendable {
     thirdTranslationLanguage: String? = nil,
     globalShortcut: GlobalShortcut = .option,
     showWindowOn: ShowWindowOn = .screenWithCursor,
+    appearance: Appearance = .dark,
     launchAtLogin: Bool = true,
     mediaKeyForwardingEnabled: Bool = true,
     scratchPadColor: ScratchPadColor = .system,
@@ -89,6 +96,7 @@ public struct Config: Codable, Equatable, Sendable {
     self.thirdTranslationLanguage = thirdTranslationLanguage
     self.globalShortcut = globalShortcut
     self.showWindowOn = showWindowOn
+    self.appearance = appearance
     self.launchAtLogin = launchAtLogin
     self.mediaKeyForwardingEnabled = mediaKeyForwardingEnabled
     self.scratchPadColor = scratchPadColor
@@ -113,6 +121,7 @@ public struct Config: Codable, Equatable, Sendable {
     thirdTranslationLanguage = try c.decodeIfPresent(String.self, forKey: .thirdTranslationLanguage)
     globalShortcut = try c.decodeIfPresent(GlobalShortcut.self, forKey: .globalShortcut) ?? d.globalShortcut
     showWindowOn = try c.decodeIfPresent(ShowWindowOn.self, forKey: .showWindowOn) ?? d.showWindowOn
+    appearance = try c.decodeIfPresent(Appearance.self, forKey: .appearance) ?? d.appearance
     launchAtLogin = try c.decodeIfPresent(Bool.self, forKey: .launchAtLogin) ?? d.launchAtLogin
     mediaKeyForwardingEnabled =
       try c.decodeIfPresent(Bool.self, forKey: .mediaKeyForwardingEnabled) ?? d.mediaKeyForwardingEnabled

@@ -201,8 +201,10 @@ struct CreateItemWidget: View {
     focusedField = .name
   }
 
+  /// Bright blue on dark, faded blue on light; the cream swatch would vanish
+  /// into the light background.
   private var defaultColor: String {
-    colorScheme == .dark ? CustomIcons.colorPalette[1] : CustomIcons.colorPalette[0]
+    colorScheme == .dark ? CustomIcons.colorPalette[1] : CustomIcons.colorPalette[7]
   }
 
   private func commit() {

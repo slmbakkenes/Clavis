@@ -71,17 +71,22 @@ final class ShellOutputView: NSView {
   }
 
   func setSuccessStyle() {
-    gradientLayer?.colors = [
-      NSColor(Theme.success).withAlphaComponent(0.15).cgColor,
-      NSColor(Theme.success).withAlphaComponent(0.02).cgColor,
-    ]
+    setGradient(NSColor(Theme.success))
   }
 
   func setFailedStyle() {
-    gradientLayer?.colors = [
-      NSColor(Theme.danger).withAlphaComponent(0.15).cgColor,
-      NSColor(Theme.danger).withAlphaComponent(0.02).cgColor,
-    ]
+    setGradient(NSColor(Theme.danger))
+  }
+
+  /// Layers take a resolved CGColor, so resolve against the app's gruvbox
+  /// variant rather than whatever drawing appearance happens to be current.
+  private func setGradient(_ color: NSColor) {
+    NSApp.effectiveAppearance.performAsCurrentDrawingAppearance {
+      gradientLayer?.colors = [
+        color.withAlphaComponent(0.15).cgColor,
+        color.withAlphaComponent(0.02).cgColor,
+      ]
+    }
   }
 
   func appendOutput(_ text: String) {

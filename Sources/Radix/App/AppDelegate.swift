@@ -23,9 +23,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
   private var isLoadingBookmarks = false
 
   func applicationDidFinishLaunching(_ notification: Notification) {
-    // Radix is gruvbox dark whatever the system is set to (see `Theme`). This
-    // also settles the vibrancy material and every AppKit control that still
-    // resolves a semantic colour, including the alert below.
+    // Gruvbox dark until config says otherwise (see `Theme`), so the alert
+    // below matches the panel when the config can't be read.
     NSApp.appearance = NSAppearance(named: .darkAqua)
 
     let store = ConfigStore()
@@ -47,6 +46,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     installTerminationSignalHandler()
+    applyAppearance(loaded.config.appearance)
     model = AppModel(store: store, config: loaded.config, state: loaded.state)
     router = InputRouter(model: model)
 
@@ -115,6 +115,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
       if old.launchAtLogin != config.launchAtLogin {
         syncLaunchAtLogin(config.launchAtLogin)
       }
+      if old.appearance != config.appearance {
+        applyAppearance(config.appearance)
+      }
     }
     syncLaunchAtLogin(loaded.config.launchAtLogin)
 
@@ -139,6 +142,17 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
       try hyperKey.setEnabled(false)
     } catch {
       NSLog("Could not remove the hyper key mapping: \(error)")
+    }
+  }
+
+  /// Picks the gruvbox variant. The app appearance also settles the vibrancy
+  /// material and every AppKit control that resolves a semantic colour;
+  /// `nil` follows the system, including when it switches at sunset.
+  private func applyAppearance(_ appearance: Config.Appearance) {
+    switch appearance {
+    case .dark: NSApp.appearance = NSAppearance(named: .darkAqua)
+    case .light: NSApp.appearance = NSAppearance(named: .aqua)
+    case .system: NSApp.appearance = nil
     }
   }
 

@@ -86,7 +86,11 @@ final class ToastView: NSView {
 
   private func setupView() {
     let gradient = CAGradientLayer()
-    gradient.colors = variant.gradientColors.map { $0.cgColor }
+    // Layers take a resolved CGColor; resolve against the app's gruvbox
+    // variant rather than whatever drawing appearance happens to be current.
+    NSApp.effectiveAppearance.performAsCurrentDrawingAppearance {
+      gradient.colors = variant.gradientColors.map { $0.cgColor }
+    }
     gradient.startPoint = CGPoint(x: 0, y: 0.5)
     gradient.endPoint = CGPoint(x: 1, y: 0.5)
     gradient.frame = bounds
@@ -96,7 +100,9 @@ final class ToastView: NSView {
     let dot = NSView()
     dot.wantsLayer = true
     dot.layer?.cornerRadius = 5
-    dot.layer?.backgroundColor = variant.dotColor.cgColor
+    NSApp.effectiveAppearance.performAsCurrentDrawingAppearance {
+      dot.layer?.backgroundColor = variant.dotColor.cgColor
+    }
     dot.frame = NSRect(x: 10, y: 20, width: 10, height: 10)
     addSubview(dot)
     dotView = dot

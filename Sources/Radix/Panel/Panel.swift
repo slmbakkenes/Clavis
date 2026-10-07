@@ -45,10 +45,8 @@ final class Panel: NSPanel, NSWindowDelegate {
     // The material on its own samples the desktop and lands on a neutral grey.
     // A gruvbox wash over it keeps the blur while making the panel the same
     // colour as a terminal window next to it.
-    let tint = NSView()
+    let tint = TintView(color: NSColor(Theme.background).withAlphaComponent(Self.tintOpacity))
     tint.translatesAutoresizingMaskIntoConstraints = false
-    tint.wantsLayer = true
-    tint.layer?.backgroundColor = NSColor(Theme.background).withAlphaComponent(Self.tintOpacity).cgColor
     effectView.addSubview(tint)
     NSLayoutConstraint.activate([
       tint.topAnchor.constraint(equalTo: effectView.topAnchor),
@@ -73,5 +71,31 @@ final class Panel: NSPanel, NSWindowDelegate {
     DispatchQueue.main.async { [weak self] in
       self?.onResignKey?()
     }
+  }
+}
+
+/// A flat fill whose layer colour follows the view's appearance. A layer only
+/// stores a resolved `CGColor`, so the gruvbox wash would otherwise stay in
+/// whichever variant was active when the panel was created.
+@MainActor
+private final class TintView: NSView {
+  private let color: NSColor
+
+  init(color: NSColor) {
+    self.color = color
+    super.init(frame: .zero)
+    wantsLayer = true
+  }
+
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+
+  override var wantsUpdateLayer: Bool { true }
+
+  /// AppKit calls this with the view's effective appearance current, both on
+  /// first display and after every appearance change.
+  override func updateLayer() {
+    layer?.backgroundColor = color.cgColor
   }
 }

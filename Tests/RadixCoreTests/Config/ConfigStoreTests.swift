@@ -23,6 +23,7 @@ private let fullConfigJSON = """
     "thirdTranslationLanguage": null,
     "globalShortcut": "command",
     "showWindowOn": "screenWithFrontmost",
+    "appearance": "light",
     "launchAtLogin": false,
     "mediaKeyForwardingEnabled": false,
     "scratchPadColor": "BLUE",
@@ -59,6 +60,7 @@ private let fullStateJSON = """
   #expect(config.thirdTranslationLanguage == nil)
   #expect(config.globalShortcut == .command)
   #expect(config.showWindowOn == .screenWithFrontmost)
+  #expect(config.appearance == .light)
   #expect(config.launchAtLogin == false)
   #expect(config.mediaKeyForwardingEnabled == false)
   #expect(config.scratchPadColor == .blue)
@@ -94,7 +96,7 @@ private let fullStateJSON = """
   #expect(
     Set(object.keys) == [
       "firstTranslationLanguage", "secondTranslationLanguage", "globalShortcut", "showWindowOn",
-      "launchAtLogin", "mediaKeyForwardingEnabled", "scratchPadColor", "searchFolders", "searchEngine",
+      "appearance", "launchAtLogin", "mediaKeyForwardingEnabled", "scratchPadColor", "searchFolders", "searchEngine",
       "customSearchUrl", "shortcuts", "showInAppBrowserBookMarks", "hyperKeyEnabled", "customItems",
       "disabledItemIds", "keymap",
     ])
@@ -105,6 +107,7 @@ private let fullStateJSON = """
   let config = try JSONDecoder().decode(Config.self, from: Data("{}".utf8))
   #expect(config == Config())
   #expect(config.globalShortcut == .option)
+  #expect(config.appearance == .dark)
   #expect(config.shortcuts == Config.defaultShortcuts)
   #expect(config.searchFolders.last?.hasSuffix("/Music") == true)
 
