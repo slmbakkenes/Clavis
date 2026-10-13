@@ -29,7 +29,7 @@
 	<key>LSUIElement</key>
 	<true/>
 	<key>NSAppleEventsUsageDescription</key>
-	<string>Radix needs permission to execute AppleScripts</string>
+	<string>Clavis needs permission to execute AppleScripts</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Allow location access to show Wi-Fi password</string>
 	<key>NSLocationAlwaysUsageDescription</key>
@@ -43,6 +43,6 @@
 	<key>NSSupportsSuddenTermination</key>
 	<true/>
 	<key>NSSystemAdministrationUsageDescription</key>
-	<string>Radix needs permission to read bookmarks and other files</string>
+	<string>Clavis needs permission to read bookmarks and other files</string>
 </dict>
 </plist>

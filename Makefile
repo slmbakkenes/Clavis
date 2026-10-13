@@ -12,14 +12,14 @@
 
 # The bundle id and signing identity must stay stable: macOS keys Accessibility
 # and other permission grants on them.
-APP_NAME  ?= Radix
-BUNDLE_ID ?= com.svenbakkenes.radix
+APP_NAME  ?= Clavis
+BUNDLE_ID ?= com.svenbakkenes.clavis
 IDENTITY  ?= MyLauncher Local Signing
 CONFIG    ?= release
 
 DIST   := dist
 APP    := $(DIST)/$(APP_NAME).app
-BIN    := .build/$(CONFIG)/Radix
+BIN    := .build/$(CONFIG)/Clavis
 RES    := Resources
 CONTENTS := $(APP)/Contents
 
@@ -38,7 +38,7 @@ bundle: build
 	iconutil -c icns "$(RES)/AppIcon.iconset" -o "$(CONTENTS)/Resources/AppIcon.icns"
 
 sign: bundle
-	codesign --force --sign "$(IDENTITY)" --entitlements "$(RES)/Radix.entitlements" \
+	codesign --force --sign "$(IDENTITY)" --entitlements "$(RES)/Clavis.entitlements" \
 		--options runtime "$(APP)"
 	codesign --verify --strict "$(APP)"
 
@@ -56,7 +56,7 @@ run: install
 
 debug:
 	swift build -c debug
-	.build/debug/Radix
+	.build/debug/Clavis
 
 test:
 	swift test

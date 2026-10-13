@@ -1,9 +1,9 @@
-# Radix
+# Clavis
 
 A personal macOS launcher, built for one machine. It makes no attempt to be
 configurable for anyone else's setup.
 
-Radix started as a fork of [Sol](https://github.com/ospfranco/sol) by ospfranco
+Clavis started as a fork of [Sol](https://github.com/ospfranco/sol) by ospfranco
 (MIT) and was rewritten from React Native to Swift. Auto-update, crash
 reporting and notarization are not part of it; it is built locally and signed
 with a self-signed certificate.
@@ -28,18 +28,18 @@ make clean
 ```
 
 `make install` quits a running instance before replacing
-`/Applications/Radix.app`. There is no auto-update; re-run it after pulling.
+`/Applications/Clavis.app`. There is no auto-update; re-run it after pulling.
 `scripts/bump-version.sh` bumps the version in `Resources/Info.plist`.
 
 ## Layout
 
-- `Sources/RadixCore`: pure logic without AppKit (config, search ranking,
+- `Sources/ClavisCore`: pure logic without AppKit (config, search ranking,
   parsers, calculator, shortcuts, clipboard history, translation parsing).
   Fully unit tested.
-- `Sources/Radix`: the app. An AppKit non-activating panel hosting SwiftUI
+- `Sources/Clavis`: the app. An AppKit non-activating panel hosting SwiftUI
   widgets, global hotkeys, OS integrations (windows, clipboard, Spotlight,
   scripts, media keys, hyperkey).
-- `Tests/RadixCoreTests`, `Tests/RadixTests`: swift-testing suites. The app
+- `Tests/ClavisCoreTests`, `Tests/ClavisTests`: swift-testing suites. The app
   tests use temporary config directories and never touch the network.
 - `docs/swift-migration.md`: how the port was done and the behaviour
   decisions made along the way.
@@ -59,10 +59,10 @@ survive rebuilds.
 
 ## Configuration
 
-Settings live in `~/.config/radix/config.json`, runtime state (usage
-frequencies, query history, scratchpad) in `~/.config/radix/state.json`.
+Settings live in `~/.config/clavis/config.json`, runtime state (usage
+frequencies, query history, scratchpad) in `~/.config/clavis/state.json`.
 Everything except `keymap` is editable in Settings. Shell (`.sh`) and
-AppleScript (`.applescript`) files in `~/.config/radix/scripts` are picked up
+AppleScript (`.applescript`) files in `~/.config/clavis/scripts` are picked up
 as you save them; give them `# name:` and `# icon:` comments.
 
 ### In-panel keybindings
@@ -83,7 +83,7 @@ config.json, mapping a chord to an action:
 `null` unbinds a default. Actions: `confirm`, `dismiss`, `selectNext`,
 `selectPrevious`, `selectLeft`, `selectRight`, `deleteSelected`,
 `editSelected`. Chords are `control+command+shift+<key>` with the key names in
-`Sources/RadixCore/Keys/Key.swift`. Prefer chords with a modifier: a bare letter
+`Sources/ClavisCore/Keys/Key.swift`. Prefer chords with a modifier: a bare letter
 still reaches the search field. The app never writes `keymap` back; Settings >
 General > Reload Config re-reads it.
 
@@ -93,8 +93,8 @@ on) are the `shortcuts` object, editable in Settings > Items.
 ## Uninstalling
 
 ```sh
-rm -rf /Applications/Radix.app
-rm -rf ~/.config/radix
+rm -rf /Applications/Clavis.app
+rm -rf ~/.config/clavis
 ```
 
 Then remove the login item in System Settings > General > Login Items.

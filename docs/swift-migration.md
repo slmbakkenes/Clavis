@@ -1,9 +1,9 @@
-# Radix: migration from React Native macOS to pure Swift
+# Clavis: migration from React Native macOS to pure Swift
 
 Status: phase 0 done (2026-09-11): `make run` installs a signed
-`/Applications/RadixNext.app` that shows the panel. Escape / cmd+space toggle
+`/Applications/ClavisNext.app` that shows the panel. Escape / cmd+space toggle
 still need a manual check.
-Phase 1 done (2026-09-11): RadixCore has Config, Keys, Search, Parsers with
+Phase 1 done (2026-09-11): ClavisCore has Config, Keys, Search, Parsers with
 70 tests green.
 Phase 2 done (2026-09-11): AppModel, InputRouter, full HotKeyManager, toasts,
 launch at login, config wiring. Verified: build, `make lint`, tests, panel
@@ -13,7 +13,7 @@ show, `showWindowOn = screenWithFrontmost` on a second display.
 Phase 3 done (2026-09-11): search widget, 78 apps / 33 preference panes /
 bookmarks loading, 23 built-in items, calculator and conversions inline,
 history, usage ranking, confirmation dialog. Verified: release build,
-`make lint`, 120 tests (including a new app-level RadixTests target), sources
+`make lint`, 120 tests (including a new app-level ClavisTests target), sources
 load at launch, compact panel height. Needs a manual check: typing, running
 an app and a built-in item, Enter on a calculator result, the Restart
 confirmation (Esc to cancel), clicking empty panel space keeps the search
@@ -29,9 +29,9 @@ through normal termination, no new crash reports, system hooks stay off while
 the old build runs (key mapping untouched). Compiled but not exercised (needs
 permissions, prompts or hardware keys): window moves, Spaces moves, media
 keys, hyperkey, Wi-Fi keychain lookup, appearance toggle, script execution.
-Manual check: quit the old Radix, grant RadixNext Accessibility, then try a
+Manual check: quit the old Clavis, grant ClavisNext Accessibility, then try a
 window shortcut (⌃⌥←), Kill process on a harmless app, a script in
-~/.config/radix/scripts, and play/pause with Music or Spotify running.
+~/.config/clavis/scripts, and play/pause with Music or Spotify running.
 Phase 5 done (2026-09-11): clipboard manager, Spotlight file search,
 translation, scratchpad, create/edit Quick Links with SF Symbol icons.
 Verified: release build, `make lint`, 209 tests, app runs through a
@@ -47,41 +47,41 @@ Scripts and About pages, shortcut recording, enable/disable items, config
 reload. Every config.json key is editable from the UI except `keymap` (hand
 edited, as before) and `scratchPadColor` (feature dropped). Verified: release
 build, `make lint`, 225 tests, app runs. Needs a manual check: ⌘, opens
-settings; record a shortcut for an item and use it (with the old Radix
+settings; record a shortcut for an item and use it (with the old Clavis
 quit); Add Folder picker returns to settings and keyboard works in the
 picker; Tab and Esc inside the custom search URL field.
 Phase 7 (cutover) partly done (2026-09-11):
-- Done: bundle id back to `com.svenbakkenes.radix`, app name Radix, version
-  2.0.0. `make install` replaced /Applications/Radix.app with the Swift build
+- Done: bundle id back to `com.svenbakkenes.clavis`, app name Clavis, version
+  2.0.0. `make install` replaced /Applications/Clavis.app with the Swift build
   (same designated requirement as the old app, so permission grants carry
   over; no tccutil reset was needed). The old React Native app is backed up at
-  `dist/Radix-react-native-1.0.0.zip`. README, `.gitignore` and
+  `dist/Clavis-react-native-1.0.0.zip`. README, `.gitignore` and
   `scripts/bump-version.sh` rewritten; `scripts/build-local.sh` superseded by
   `make install`; JetBrains Mono removed. Verified: release build, `make lint`
   (exit 0), 225 tests, installed app runs, no crash report.
 - Not done (deletion blocked by the auto-mode safety check, needs the user):
   removing the React Native tree from the repo and
-  /Applications/RadixNext.app. Commands:
+  /Applications/ClavisNext.app. Commands:
 
   ```sh
   rm -rf macos src patches node_modules build .github .vscode index.js \
     package.json bun.lock babel.config.js metro.config.js tailwind.config.js \
     biome.json tsconfig.json nativewind-env.d.ts app.json mise.toml .prettierrc \
     scripts/build-local.sh
-  rm -rf /Applications/RadixNext.app
+  rm -rf /Applications/ClavisNext.app
   ```
 
   Then drop the "Leftovers of the React Native build" block from .gitignore.
   The uncommitted change to macos/sol.xcodeproj/project.pbxproj only reorders
   two SFSymbol entries, so nothing is lost with it.
-- Optional: the old file search index, `~/Library/Application Support/Radix`
+- Optional: the old file search index, `~/Library/Application Support/Clavis`
   (18 MB), is unused by the Swift app.
 - Not verified: login item registration and system hooks (media keys) on the
   installed app; NSLog output doesn't reach `log show`. Check Settings >
   General and System Settings > General > Login Items.
 
 Decisions made during phase 6:
-- Shortcut recording needs no event tap: Radix's own item shortcuts are
+- Shortcut recording needs no event tap: Clavis's own item shortcuts are
   unregistered while recording and keys arrive through the panel's key
   monitor. System-reserved combos (⌘Tab and the like) can't be recorded.
 - Recorded keys come from the physical key (as registration does), not the
@@ -106,7 +106,7 @@ Decisions made during phase 5:
 - File search uses Spotlight (NSMetadataQuery on the configured folders)
   instead of the SQLite index. The old search only ever looked at 1000 rows of
   an 18 MB index. Folders excluded from Spotlight return nothing. The old
-  ~/Library/Application Support/Radix/filesearch.db can go at cutover.
+  ~/Library/Application Support/Clavis/filesearch.db can go at cutover.
 - Weather and GitHub search were dropped (never used). The scratchpad colour
   cycling was dropped (never rendered); Tab types a tab.
 - Custom item icons are SF Symbols. Old PNG icon names map to symbols (11
@@ -116,14 +116,14 @@ Decisions made during phase 5:
 - Clipboard history is a 0600 JSON file (only when `saveHistory` is on) instead
   of the Keychain; with saving off the file is deleted. Copied images are 0600
   in a 0700 directory. Password manager copies (Concealed, Transient,
-  AutoGenerated types) are not recorded. Radix's own re-pastes are not recorded
+  AutoGenerated types) are not recorded. Clavis's own re-pastes are not recorded
   again.
 - A copied file is recorded by its original path. The old build copied it into
   the temporary directory, deleting anything with the same name there first
   (and a copied volume root would have deleted the temporary directory).
   Only image files are copied into the managed images directory, off the main
   thread. File URLs take priority over image data (Finder icons).
-- Orphaned clipboard images are only cleaned up when no other Radix build is
+- Orphaned clipboard images are only cleaned up when no other Clavis build is
   running and, with history saving on, only once this build has its own
   history file.
 - Lists that change while visible (processes, clipboard, file search) select
@@ -135,11 +135,11 @@ Decisions made during phase 5:
 - The note saves 500 ms after typing pauses, and on hide and quit; sudden
   termination is disabled while a note or clipboard save is pending.
 - Tests inject translation and clipboard storage, so they never reach the
-  network or ~/.config/radix.
+  network or ~/.config/clavis.
 
 Decisions made during phase 4:
 - System-wide hooks (per-item shortcuts, media key tap, hyperkey) install
-  only while no other Radix build (release or old debug id) is running, and
+  only while no other Clavis build (release or old debug id) is running, and
   follow it launching or quitting. The main ⌘Space toggle is unaffected.
 - DoNotDisturb and now-playing media info were dropped: the old JS never
   called them. That also removes the private MediaRemote dependency.
@@ -196,7 +196,7 @@ Decisions made during phase 3:
 
 Decisions made during phase 2:
 - Per-item global shortcuts and launch at login only activate under the final
-  bundle id `com.svenbakkenes.radix`. Carbon lets two processes register the
+  bundle id `com.svenbakkenes.clavis`. Carbon lets two processes register the
   same combo, so the migration build would silently compete with the old app.
 - Modifier state comes from each key event only. The old sticky
   flagsChanged state went stale across a hide and could turn letters into
@@ -229,17 +229,17 @@ lines of existing Swift under `macos/sol-macOS` where it is not bridge glue.
 ## Target layout
 
 ```
-Radix/                          repo root (this repo, after cutover)
+Clavis/                          repo root (this repo, after cutover)
   Package.swift
   Makefile                      build / bundle / sign / install / run
   Sources/
-    RadixCore/                  library, NO AppKit import, fully testable
+    ClavisCore/                  library, NO AppKit import, fully testable
       Config/                   Codable models for config.json + state.json
       Search/                   fuzzy scorer, ranking (frequency/recency)
       Parsers/                  calculator, unit conversion, timezone, URL detection
       Keys/                     keycodes, chord parsing, shortcut normalisation, keymap
       Items/                    Item model + built-in catalog definitions (data only)
-    Radix/                      executable, AppKit + SwiftUI
+    Clavis/                      executable, AppKit + SwiftUI
       App/                      main.swift, AppDelegate, StatusBarItem, LaunchAtLogin
       Panel/                    Panel (NSPanel), PanelManager, Overlay, Toast
       Input/                    HotKeyManager (Carbon RegisterEventHotKey), key routing, hyperkey tap
@@ -252,16 +252,16 @@ Radix/                          repo root (this repo, after cutover)
                                 Scratchpad, Translation, CreateItem, Settings/*
       Services/                 URLSession clients: Translator, Weather, GitHub
   Tests/
-    RadixCoreTests/
+    ClavisCoreTests/
   Resources/
     Info.plist
-    Radix.entitlements
-    Radix.icns
+    Clavis.entitlements
+    Clavis.icns
     JetBrainsMono.ttf
   docs/
 ```
 
-Two targets only. `RadixCore` must not import AppKit so tests stay fast and
+Two targets only. `ClavisCore` must not import AppKit so tests stay fast and
 the logic stays honest. Everything that touches the OS lives in the
 executable. Split further only if a real reason appears.
 
@@ -294,7 +294,7 @@ in one target; these are small): `NSString+Score.m` (129 lines),
 
 Replace: vendored `KeychainAccess.swift` (3143 lines) with either ~60 lines of
 Security.framework calls or, simpler, drop Keychain for clipboard history and
-write it to `~/.config/radix/clipboard.json` with 0600 permissions.
+write it to `~/.config/clavis/clipboard.json` with 0600 permissions.
 `HotKey` pod with a direct Carbon `RegisterEventHotKey` wrapper (~80 lines).
 
 ## JS dependency replacements
@@ -304,7 +304,7 @@ write it to `~/.config/radix/clipboard.json` with 0600 permissions.
 | MobX stores | `@Observable` classes in `Store/` |
 | config.json / state.json via JSI FS | `Codable` + `JSONEncoder` (keep file format so old and new builds coexist) |
 | minisearch + compareRankedItems | own fuzzy scorer (port of NSString+Score) + frequency/recency tiebreak |
-| expr-eval | small Pratt-parser calculator in RadixCore (NSExpression is too limited) |
+| expr-eval | small Pratt-parser calculator in ClavisCore (NSExpression is too limited) |
 | convert-units | Foundation `Measurement` / `Dimension` units |
 | chrono-node | `NSDataDetector` (.date) |
 | luxon | `Date`, `TimeZone`, `DateFormatter` |
@@ -333,8 +333,8 @@ next phase before the exit criterion is met.
 ### Phase 0: skeleton (day 1)
 - `Package.swift`, two targets, tests target.
 - `Makefile`: `build`, `bundle`, `sign`, `install`, `run`, `clean`.
-  Bundle id `com.svenbakkenes.radix.swift` during the migration so the RN
-  build keeps its Accessibility grant; share `~/.config/radix`.
+  Bundle id `com.svenbakkenes.clavis.swift` during the migration so the RN
+  build keeps its Accessibility grant; share `~/.config/clavis`.
 - `Info.plist` from the current one minus RN keys (`RCTNewArchEnabled`,
   `NSAppTransportSecurity`, storyboard). Keep `LSUIElement`,
   usage descriptions, font path.
@@ -346,7 +346,7 @@ next phase before the exit criterion is met.
   hides a blurred panel on cmd+space, the Accessibility prompt appears once,
   and `sourcekit-lsp` resolves symbols in Neovim.
 
-### Phase 1: RadixCore (pure logic, with tests)
+### Phase 1: ClavisCore (pure logic, with tests)
 - Port `ui.store.helpers.ts`: unit conversion parser, timezone parser,
   `formatExpressionResult`. Drop flight lookup unless wanted.
 - Port `keys.ts`, `keymap.ts`, `shortcuts.tsx`, `search.ts`, `constants.ts`.
@@ -404,7 +404,7 @@ next phase before the exit criterion is met.
 - Exit: every key in `config.json` is editable from the UI.
 
 ### Phase 7: cutover
-- Bundle id back to `com.svenbakkenes.radix`; `permissions:reset` once.
+- Bundle id back to `com.svenbakkenes.clavis`; `permissions:reset` once.
 - Delete `macos/`, `src/`, `index.js`, `package.json`, `bun.lock`,
   `node_modules`, `patches/`, babel/metro/tailwind/biome/tsconfig files,
   `mise.toml`, `.vscode/`.

@@ -2,28 +2,28 @@
 import PackageDescription
 
 let package = Package(
-  name: "Radix",
+  name: "Clavis",
   platforms: [.macOS(.v14)],
   targets: [
     // Pure logic: no AppKit, fully unit-testable.
-    .target(name: "RadixCore"),
+    .target(name: "ClavisCore"),
     // The app: AppKit shell, SwiftUI content, OS integrations.
     .executableTarget(
-      name: "Radix",
-      dependencies: ["RadixCore"],
+      name: "Clavis",
+      dependencies: ["ClavisCore"],
       linkerSettings: [
         .linkedFramework("Carbon"),
         .linkedFramework("AppKit"),
       ]
     ),
     .testTarget(
-      name: "RadixCoreTests",
-      dependencies: ["RadixCore"],
+      name: "ClavisCoreTests",
+      dependencies: ["ClavisCore"],
       resources: [.copy("Fixtures")]
     ),
     // App-level logic (search rows, model, key routing) that needs the
     // executable's types but no running UI.
-    .testTarget(name: "RadixTests", dependencies: ["Radix"]),
+    .testTarget(name: "ClavisTests", dependencies: ["Clavis"]),
   ],
   swiftLanguageModes: [.v6]
 )

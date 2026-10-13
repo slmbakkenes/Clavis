@@ -33,10 +33,10 @@ echo "==> Generating key and certificate"
 openssl req -x509 -newkey rsa:2048 -nodes -sha256 -days 3650 \
   -keyout "$TMP/key.pem" -out "$TMP/cert.pem" -config "$TMP/cert.cnf" >/dev/null 2>&1
 openssl pkcs12 -export -legacy -inkey "$TMP/key.pem" -in "$TMP/cert.pem" \
-  -out "$TMP/cert.p12" -passout pass:radix -name "$NAME"
+  -out "$TMP/cert.p12" -passout pass:clavis -name "$NAME"
 
 echo "==> Importing into login keychain"
-security import "$TMP/cert.p12" -k "$KEYCHAIN" -P radix \
+security import "$TMP/cert.p12" -k "$KEYCHAIN" -P clavis \
   -T /usr/bin/codesign -T /usr/bin/security
 
 # Trust it for code signing at the user level. macOS shows a dialog for this.
